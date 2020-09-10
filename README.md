@@ -21,7 +21,7 @@ openssl은 기술적인 이유에 의하여 ANSI C로 구현되어 있으나, �
 1. openssl의 install
     - `bew install openssl`
     - Default installed folder: `/usr/local/Cellar/openssl@1.1/1.1.1g`이며 가능하면 기억해 놓는 것이 편리하다.
-2. <span style="font-family: Courier;">./tests/test</span> 
+2. `% ./tests/test`
 
 <!---
 <span style="font-family: Courier;">brew install openssl</span>
