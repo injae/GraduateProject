@@ -92,12 +92,12 @@
 
 
 ## Comments
-1. __Doxygen__을 따를 정도면 충분해 보여서; 최대한 정성껏 주석을 추가했습니다 :-)
+1. **Doxygen**을 따를 정도면 충분해 보여서; 최대한 정성껏 주석을 추가했습니다 :wink:
 2. class는
     > ~~~cpp
     > /**
     >  * @class _ClassName
-    >  * @brief 적당한 설명--없는것 보다는 나은 듯 :-)
+    >  * @brief 적당한 설명--없는것 보다는 나은 듯 :smiley:
     >  *
     >  */
     >~~~
@@ -121,4 +121,4 @@
     > /// @brief  what for?
     > static const uint32_t   _cPi  =  3.141592;
     >~~~
-5. 자잘한 것은 알아서 debugging만 편하면 적당히 알아서 하시면...
+5. 자잘한 것은 알아서 debugging만 편하면 적당히 알아서 하시면...:shipit:
