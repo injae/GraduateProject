@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libgpcrypt.a  CMakeFiles/gpcrypt.dir/crypt.cc.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libgpcrypt.a
