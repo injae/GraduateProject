@@ -14,7 +14,14 @@
 int 
 main(int argc, char** argv)
 {
-    _openssl_BN a(100);
+    // using std::cout;
+    // using std::endl;
+
+    _openssl_BN a, b(100);
+
+    ///< random test
+    std::cout << "1. Random value generation: " << std::endl;
+    a._randomInplace(b);
 
     return 1;
 }
