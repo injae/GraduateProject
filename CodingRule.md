@@ -88,16 +88,16 @@
     >     ...
     > }
     >~~~
-4. intrinsic type외에 typedef하려는 경우; <span style="font-family:courier">typedef type_A type_B;</span>하기 전에 <span style="font-family:courier">#include \<cstdint\></span>를 먼저 살펴보고 있으면 여기 미리 정의되어 있는 type들을 사용하길 권합니다.
+4. intrinsic type외에 `typedef`하기 전에 `#include <cstdint>`를 먼저 살펴보고 있으면 여기 미리 정의되어 있는 type들을 사용하길 권합니다.
 
 
 ## Comments
-1. Doxygen을 따를 정도면 충분해 보여서; 최대한 정성껏 주석을 추가했습니다 :-)
+1. __Doxygen__을 따를 정도면 충분해 보여서; 최대한 정성껏 주석을 추가했습니다 :-)
 2. class는
     > ~~~cpp
     > /**
     >  * @class _ClassName
-    >  * @brief 정당한 설명
+    >  * @brief 적당한 설명--없는것 보다는 나은 듯 :-)
     >  *
     >  */
     >~~~
@@ -106,12 +106,12 @@
     > ~~~cpp
     > /**
     >  * @fn    _doSomething(...)
-    >  * @brief 정당한 설명
+    >  * @brief 적당한 설명
     >  * @param arg1
     >  *
     >  */
     >~~~
-4. #define과 특별한 variable들은 용도 설명만 간단히 설명했습니다.
+4. `#define`과 특별한 variable들은 용도 설명만 간단히 설명했습니다.
     >~~~cpp
     > /// @def    SOME_LITERAL
     > /// @brief  what for?
