@@ -10,6 +10,7 @@
 #ifndef __CrYpT_H
 #define __CrYpT_H
 
+#include <string>
 #include <cstdint>
 
 #include <openssl/bn.h>
@@ -33,15 +34,39 @@ public:
 
     static inline _openssl_BN _one(void) {return _openssl_BN(1);}          ///< singleton
     static inline _openssl_BN _zero(void) {return _openssl_BN(0);}         ///< singleton
-    
+
+    ///< choose a random
+    void _randomInplace(const _openssl_BN& range);
+    void _randomInplace(const int bits);
+    ///< arithmetic operations
+    _openssl_BN _mod(const _openssl_BN& x, const _openssl_BN& p);
+    void _modInplace(const _openssl_BN& p);
+    _openssl_BN _add(const _openssl_BN& x, const _openssl_BN& p);           ///< return this + x mod p
+    void _addInplace(const _openssl_BN& x, const _openssl_BN& p);           ///< this = this + x mod p
+    ///< overloading arith. operations
+    _openssl_BN& operator=(const int rhs);                                  ///< this <- rhs
+    _openssl_BN& operator=(const _openssl_BN& rhs);     
+
+    ///< input
+    void _dec2bn(const char* dec);
+    void _hex2bn(const char* hex);
+    ///< output
+    std::string _bn2dec(const _openssl_BN& bn) const;
+    std::string _bn2hex(const _openssl_BN& bn) const;    
+    void _bn2byte(const _openssl_BN& bn, uint8_t* bytes, int* len) const;
+    void _bn2byte(uint8_t* bytes, int* len) const;
+    void _byte2bn(const uint8_t* bytes, const int len, _openssl_BN& bn);
+    void _byte2bn(const uint8_t* bytes, const int len);                
+
 protected:
 private:
+    void setModulus__(void);
 
 ///<
 public:
     BN_CTX* _ctx;       ///< context
     BIGNUM* _ptr;       ///< pointer to the big number 
-    BIGNUM* _modp;      ///< the modulus prime p
+    // BIGNUM* _modp;      ///< the modulus prime p
 protected:
 private:
 };
