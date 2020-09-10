@@ -1,8 +1,8 @@
 # 졸업 프로젝트 구현용 예제
 
-2020년 가을학기 졸업 프로젝트의 구현에 적용되는 Big Integer Library의 하나인 [openssl](https://www.openssl.org)에서 제공되는 `<openssl/bn.h`과 `openssl/rand.h`를 이용하여 구현하는 간단한 예제를 설명한다.
+2020년 가을학기 졸업 프로젝트의 구현에 적용되는 Big Integer Library의 하나인 [openssl](https://www.openssl.org)에서 제공되는 `<openssl/bn.h>`과 `<openssl/rand.h>`를 이용하여 구현하는 간단한 예제를 설명한다.
 
-openssl은 기술적인 이유에 의하여 ANSI C로 구현되어 있으나, 본 예제에서는 Warpper Class를 만들어 C++ (정확하게는 std=c++11) 형식으로 구현한다.
+openssl은 기술적인 이유에 의하여 ANSI C로 구현되어 있으나, 본 예제에서는 Wrapper Class를 만들어 C++ (정확하게는 std=c++11) 형식으로 구현한다.
 
 ## 설정
 * openssl에서 제공하는 Big Number 연산을 위한 Funtion Prototype은 Openssl [설명서](https://www.openssl.org/docs/man1.0.2/man3/bn.html)를 참고한다. Install하는 방법은 여러 사이트에서 소개되었기 때문에 생략한다.
@@ -20,7 +20,7 @@ openssl은 기술적인 이유에 의하여 ANSI C로 구현되어 있으나, �
 ## 사용법
 1. openssl의 install
     - `bew install openssl`
-    - Default installed folder: `/usr/local/Cellar/openssl@1.1/1.1.1g`이며 가능하면 기억해 놓는 것이 편리하다.
+    - Default installed folder (only for me): `/usr/local/Cellar/openssl@1.1/1.1.1g`이며 가능하면 기억해 놓는 것이 편리하다.
 2. `% ./tests/test`
 
 <!---
