@@ -186,6 +186,41 @@ _openssl_BN::_hex2bn(const char* hex)
 }
 
 /**
+ * @fn      void _openssl_BN::_byte2bn(_openssl_BN& bn, const uint8_t* bytes, const int len)
+ * @brief   convert a byte string of size len into an openssl big num
+ * @param   bytes   a byte string
+ * @param   len     length
+ * 
+ */
+void
+_openssl_BN::_byte2bn(const uint8_t* bytes, const int len)
+{
+    assert(0 != _ptr);
+    BN_bin2bn(bytes, len, this->_ptr);
+
+    return;
+}
+
+/**
+ * @fn      std::string _openssl_BN::_bn2dec(void) const
+ * @brief   convert an openssl big num into a decimal string
+ * 
+ */
+std::string
+_openssl_BN::_bn2dec(void) const
+{
+    std::string res = "";
+    char*       dec = 0;
+
+    dec = BN_bn2dec(this->_ptr);
+    for (auto i = 0; i < std::strlen(dec); i++) {
+        res = res + dec[i];
+    }
+
+    return res;
+}
+
+/**
  * @fn      std::string _openssl_BN::_bn2dec(const _openssl_BN& bn) const
  * @brief   convert an openssl big num into a decimal string
  * 
@@ -199,6 +234,25 @@ _openssl_BN::_bn2dec(const _openssl_BN& bn) const
     dec = BN_bn2dec(bn._ptr);
     for (auto i = 0; i < std::strlen(dec); i++) {
         res = res + dec[i];
+    }
+
+    return res;
+}
+
+/**
+ * @fn      std::string _openssl_BN::_bn2hex(void) const
+ * @brief   convert an openssl big num into a hexdecimal string
+ * 
+ */
+std::string
+_openssl_BN::_bn2hex(void) const
+{
+    std::string res = "";
+    char*       hex = 0;
+
+    hex = BN_bn2hex(this->_ptr);
+    for (auto i = 0; i < std::strlen(hex); i++) {
+        res = res + hex[i];
     }
 
     return res;
@@ -221,4 +275,71 @@ _openssl_BN::_bn2hex(const _openssl_BN& bn) const
     }
 
     return res;
+}
+
+/**
+ * @fn      void _openssl_BN::_bn2byte(uint8_t* bytes, int* len) const
+ * @brief   convert a big num into a byte sting of size len
+ * 
+ */
+void 
+_openssl_BN::_bn2byte(uint8_t* bytes, int* len) const
+{
+    assert(0 != bytes);
+    *len = BN_bn2bin(this->_ptr, bytes);
+
+    return;
+}
+
+/**
+ * @fn      int _openssl_BN::_getBitSize(void) const
+ * @brief   count the big num size in bits
+ * 
+ */
+int
+_openssl_BN::_getBitSize(void) const
+{
+    return BN_num_bits(this->_ptr);
+}
+
+/**
+ * @fn      int _openssl_BN::_getByteSize(void) const
+ * @brief   count the big num size in bytes
+ * 
+ */
+int
+_openssl_BN::_getByteSize(void) const
+{
+    return BN_num_bytes(this->_ptr);
+}
+
+/**
+ * @fn      _openssl_BN& _openssl_BN::operator=(const int rhs)
+ * @brief   assignment by an integer
+ * 
+ */
+_openssl_BN&
+_openssl_BN::operator=(const int rhs)
+{
+    if (0 < rhs) {
+        BN_set_word(_ptr, static_cast<unsigned long>(rhs));
+    }
+    else {
+        BN_set_word(_ptr, static_cast<unsigned long>(-rhs));
+        BN_set_negative(_ptr, 1);
+    }
+    return *this;
+}
+
+/**
+ * @fn      _openssl_BN& _openssl_BN::operator=(const _openssl_BN& rhs)
+ * @brief   assignment
+ * 
+ */
+_openssl_BN&
+_openssl_BN::operator=(const _openssl_BN& rhs)
+{
+    BN_copy(this->_ptr, rhs._ptr);
+
+    return *this;
 }
