@@ -35,6 +35,10 @@ public:
     static inline _openssl_BN _one(void) {return _openssl_BN(1);}          ///< singleton
     static inline _openssl_BN _zero(void) {return _openssl_BN(0);}         ///< singleton
 
+    ///< size
+    int _getByteSize(void) const;
+    int _getBitSize(void) const;
+
     ///< choose a random
     void _randomInplace(const _openssl_BN& range);
     void _randomInplace(const int bits);
@@ -50,13 +54,13 @@ public:
     ///< input
     void _dec2bn(const char* dec);
     void _hex2bn(const char* hex);
+    void _byte2bn(const uint8_t* bytes, const int len);                
     ///< output
     std::string _bn2dec(const _openssl_BN& bn) const;
     std::string _bn2hex(const _openssl_BN& bn) const;    
-    void _bn2byte(const _openssl_BN& bn, uint8_t* bytes, int* len) const;
+    std::string _bn2dec(void) const;
+    std::string _bn2hex(void) const;
     void _bn2byte(uint8_t* bytes, int* len) const;
-    void _byte2bn(const uint8_t* bytes, const int len, _openssl_BN& bn);
-    void _byte2bn(const uint8_t* bytes, const int len);                
 
 protected:
 private:
