@@ -135,12 +135,12 @@ _openssl_BN::_addInplace(const _openssl_BN& x, const _openssl_BN& p)
 }
 
 /**
- * @fn      _openssl_BN _openssl_BN::_mod(const _openssl_BN& x, const _openssl_BN& p)
+ * @fn      _openssl_BN _openssl_BN::_mod(const _openssl_BN& x, const _openssl_BN& p) const
  * @brief   r = x mod p
  * 
  */
 _openssl_BN 
-_openssl_BN::_mod(const _openssl_BN& x, const _openssl_BN& p)
+_openssl_BN::_mod(const _openssl_BN& x, const _openssl_BN& p) const
 {
     _openssl_BN res;
 
@@ -342,4 +342,166 @@ _openssl_BN::operator=(const _openssl_BN& rhs)
     BN_copy(this->_ptr, rhs._ptr);
 
     return *this;
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+_openssl_BN 
+_openssl_BN::_add(const _openssl_BN& x, const _openssl_BN& p) const
+{
+    _openssl_BN res;
+
+    ///< res = this + x mod p
+    BN_mod_add(res._ptr, _ptr, x._ptr, p._ptr, _ctx);
+
+    return res;
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+void 
+_openssl_BN::_addInplace(const _openssl_BN& x, const _openssl_BN& p) 
+{
+    ///< this = this + x mod p
+    BN_mod_add(_ptr, _ptr, x._ptr, p._ptr, _ctx);
+
+    return;
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+_openssl_BN 
+_openssl_BN::_sub(const _openssl_BN& x, const _openssl_BN& p) const
+{
+    _openssl_BN res;
+
+    ///< res = this - x mod p
+    BN_mod_sub(res._ptr, _ptr, x._ptr, p._ptr, _ctx);
+
+    return res;
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+void 
+_openssl_BN::_subInplace(const _openssl_BN& x, const _openssl_BN& p) 
+{
+    ///< this = this - x mod p
+    BN_mod_sub(_ptr, _ptr, x._ptr, p._ptr, _ctx);
+
+    return;
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+_openssl_BN 
+_openssl_BN::_mul(const _openssl_BN& x, const _openssl_BN& p) const
+{
+
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+void 
+_openssl_BN::_mulInplace(const _openssl_BN& x, const _openssl_BN& p)  
+{
+
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+_openssl_BN 
+_openssl_BN::_inverse(const _openssl_BN& p) const
+{
+
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+void 
+_openssl_BN::_inverseInplace(const _openssl_BN& p) 
+{
+
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */    
+_openssl_BN 
+_openssl_BN::_exp(const _openssl_BN& x, const _openssl_BN& p) const
+{
+
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+void 
+_openssl_BN::_expInplace(const _openssl_BN& x, const _openssl_BN& p) 
+{
+
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+_openssl_BN 
+_negate(const _openssl_BN& p) const
+{
+    _openssl_BN res;
+
+    if (BN_is_zero(_ptr)) {
+        return _openssl_BN();
+    }
+    ///< res = p - this
+    BN_sub(res._ptr, p._ptr, _ptr);
+
+    return res;
+}
+
+/**
+ * @fn
+ * @brief
+ * 
+ */
+void 
+_negateInplace(const _openssl_BN& p)
+{
+    if (BN_is_zero(_ptr)) {
+        return;
+    }
+    ///< this = p - this
+    BN_sub(_ptr, p._ptr, _ptr);
+
+    return;
 }
