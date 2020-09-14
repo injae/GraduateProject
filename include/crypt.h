@@ -17,9 +17,12 @@
 #include <openssl/rand.h>
 
 /**
- * @class
- * @brief
+ * @class   _openssl_BN
+ * @brief   a wrapper class that gives an interface to the openssl::Big number functions
  * 
+ *          In this class, the modulus p is explicitly given for intructive purpose
+ *          If more reality is persued, the modulus p had better be embedded into the class
+ *          Therefore, if possible I hope that you freely modify this class at your disposal
  */
 class _openssl_BN
 {
@@ -32,18 +35,20 @@ public:
     _openssl_BN(const u_int8_t* bytes, const size_t len);
     virtual ~_openssl_BN(void);
 
-    static inline _openssl_BN _one(void) {return _openssl_BN(1);}          ///< singleton
-    static inline _openssl_BN _zero(void) {return _openssl_BN(0);}         ///< singleton
+    static inline _openssl_BN _one(void) {return _openssl_BN(1);}           ///< singleton
+    static inline _openssl_BN _zero(void) {return _openssl_BN(0);}          ///< singleton
+    inline bool _isOne(void) const; 
+    inline bool _isZero(void) const;    
 
     ///< size
     int _getByteSize(void) const;
     int _getBitSize(void) const;
 
-    ///< choose a random
+    ///< choose a random and store itself
     void _randomInplace(const _openssl_BN& range);
     void _randomInplace(const int bits);
     ///< arithmetic operations
-    _openssl_BN _mod(const _openssl_BN& x, const _openssl_BN& p) const;
+    _openssl_BN _mod(const _openssl_BN& p) const;
     void _modInplace(const _openssl_BN& p);
     _openssl_BN _negate(const _openssl_BN& p) const;                                ///< return -this mod p
     void _negateInplace(const _openssl_BN& p);                                      ///< this = -this mod p
@@ -53,13 +58,22 @@ public:
     void _subInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this - x mod p
     _openssl_BN _mul(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this * x mod p
     void _mulInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this * x mod p
-    _openssl_BN _inverse(const _openssl_BN& p) const;                               ///< return this^{-1} mod p
-    void _inverseInplace(const _openssl_BN& p);                                     ///< this = this^{-1} mod p
+    _openssl_BN _inv(const _openssl_BN& p) const;                                   ///< return this^{-1} mod p
+    void _invInplace(const _openssl_BN& p);                                         ///< this = this^{-1} mod p
     _openssl_BN _exp(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this ^ x mod p
     void _expInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this ^ x mod p
-    ///< overloading arith. operations
+    ///< primality test
+    bool _isPrime(void) const;
+    ///< overloading operations
     _openssl_BN& operator=(const int rhs);                                          ///< this <- rhs
     _openssl_BN& operator=(const _openssl_BN& rhs);     
+
+    bool operator==(const _openssl_BN& rhs);
+    bool operator!=(const _openssl_BN& rhs);
+
+    // _openssl_BN& operator+=(const _openssl_BN& rhs);
+    // _openssl_BN& operator-=(const _openssl_BN& rhs);
+    // _openssl_BN& operator*=(const _openssl_BN& rhs);
 
     ///< input
     void _dec2bn(const char* dec);
@@ -74,7 +88,7 @@ public:
 
 protected:
 private:
-    void setModulus__(void);
+    // void setModulus__(void);
 
 ///<
 public:
