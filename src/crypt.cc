@@ -110,12 +110,12 @@ _openssl_BN::_randomInplace(const int bits)
  * 
  */ 
 _openssl_BN 
-_openssl_BN::_add(const _openssl_BN& x, const _openssl_BN& p)
+_openssl_BN::_add(const _openssl_BN& x, const _openssl_BN& p) const
 {
     _openssl_BN res;
 
     ///< res = this + x mod p
-    BN_mod_add(res._ptr, _ptr, x._ptr, p._ptr, _ctx);
+    BN_mod_add(res._ptr, this->_ptr, x._ptr, p._ptr, _ctx);
 
     return res;
 }
@@ -128,24 +128,24 @@ _openssl_BN::_add(const _openssl_BN& x, const _openssl_BN& p)
 void
 _openssl_BN::_addInplace(const _openssl_BN& x, const _openssl_BN& p)
 {
-    ///< res = this + x mod p
-    BN_mod_add(_ptr, _ptr, x._ptr, p._ptr, _ctx);
+    ///< this = this + x mod p
+    BN_mod_add(this->_ptr, this->_ptr, x._ptr, p._ptr, _ctx);
 
     return;
 }
 
 /**
- * @fn      _openssl_BN _openssl_BN::_mod(const _openssl_BN& x, const _openssl_BN& p) const
- * @brief   r = x mod p
+ * @fn      _openssl_BN _openssl_BN::_mod(const _openssl_BN& p) const
+ * @brief   res = this mod p
  * 
  */
 _openssl_BN 
-_openssl_BN::_mod(const _openssl_BN& x, const _openssl_BN& p) const
+_openssl_BN::_mod(const _openssl_BN& p) const
 {
     _openssl_BN res;
 
     ///< res = x mod p
-    BN_mod(res._ptr, x._ptr, p._ptr, _ctx);
+    BN_mod(res._ptr, this->_ptr, p._ptr, _ctx);
 
     return res;
 }
@@ -345,38 +345,8 @@ _openssl_BN::operator=(const _openssl_BN& rhs)
 }
 
 /**
- * @fn
- * @brief
- * 
- */
-_openssl_BN 
-_openssl_BN::_add(const _openssl_BN& x, const _openssl_BN& p) const
-{
-    _openssl_BN res;
-
-    ///< res = this + x mod p
-    BN_mod_add(res._ptr, _ptr, x._ptr, p._ptr, _ctx);
-
-    return res;
-}
-
-/**
- * @fn
- * @brief
- * 
- */
-void 
-_openssl_BN::_addInplace(const _openssl_BN& x, const _openssl_BN& p) 
-{
-    ///< this = this + x mod p
-    BN_mod_add(_ptr, _ptr, x._ptr, p._ptr, _ctx);
-
-    return;
-}
-
-/**
- * @fn
- * @brief
+ * @fn      _openssl_BN _openssl_BN::_sub(const _openssl_BN& x, const _openssl_BN& p) const
+ * @brief   return this - x mod p
  * 
  */
 _openssl_BN 
@@ -385,98 +355,122 @@ _openssl_BN::_sub(const _openssl_BN& x, const _openssl_BN& p) const
     _openssl_BN res;
 
     ///< res = this - x mod p
-    BN_mod_sub(res._ptr, _ptr, x._ptr, p._ptr, _ctx);
+    BN_mod_sub(res._ptr, this->_ptr, x._ptr, p._ptr, _ctx);
 
     return res;
 }
 
 /**
- * @fn
- * @brief
+ * @fn      void _openssl_BN::_subInplace(const _openssl_BN& x, const _openssl_BN& p)
+ * @brief   this = this - x mod p
  * 
  */
 void 
 _openssl_BN::_subInplace(const _openssl_BN& x, const _openssl_BN& p) 
 {
     ///< this = this - x mod p
-    BN_mod_sub(_ptr, _ptr, x._ptr, p._ptr, _ctx);
+    BN_mod_sub(_ptr, this->_ptr, x._ptr, p._ptr, _ctx);
 
     return;
 }
 
 /**
- * @fn
- * @brief
+ * @fn      _openssl_BN _openssl_BN::_mul(const _openssl_BN& x, const _openssl_BN& p) const
+ * @brief   return this * x mod p
  * 
  */
 _openssl_BN 
 _openssl_BN::_mul(const _openssl_BN& x, const _openssl_BN& p) const
 {
+    _openssl_BN res;
 
+    ///< res = this * x mod p
+    BN_mod_mul(res._ptr, this->_ptr, x._ptr, p._ptr, _ctx);
+
+    return res;
 }
 
 /**
- * @fn
- * @brief
+ * @fn      void _openssl_BN::_mulInplace(const _openssl_BN& x, const _openssl_BN& p) 
+ * @brief   this = this * x mod p
  * 
  */
 void 
 _openssl_BN::_mulInplace(const _openssl_BN& x, const _openssl_BN& p)  
 {
+    ///< this = this * x mod p
+    BN_mod_mul(this->_ptr, this->_ptr, x._ptr, p._ptr, _ctx);
 
+    return;
 }
 
 /**
- * @fn
- * @brief
+ * @fn      _openssl_BN _openssl_BN::_inv(const _openssl_BN& p) const
+ * @brief   return 1/this mod p
  * 
  */
 _openssl_BN 
-_openssl_BN::_inverse(const _openssl_BN& p) const
+_openssl_BN::_inv(const _openssl_BN& p) const
 {
+    _openssl_BN res;
 
+    ///< res = 1 /this mod p
+    BN_mod_inverse(res._ptr, this->_ptr, p._ptr, _ctx);
+
+    return res;
 }
 
 /**
- * @fn
- * @brief
+ * @fn      void _openssl_BN::_invInplace(const _openssl_BN& p)
+ * @brief   this = 1/this mod p
  * 
  */
 void 
-_openssl_BN::_inverseInplace(const _openssl_BN& p) 
+_openssl_BN::_invInplace(const _openssl_BN& p) 
 {
+    ///< this = 1/this mod p
+    BN_mod_inverse(this->_ptr, this->_ptr, p._ptr, _ctx);
 
+    return;
 }
 
 /**
- * @fn
- * @brief
+ * @fn      _openssl_BN _openssl_BN::_exp(const _openssl_BN& x, const _openssl_BN& p) const
+ * @brief   return this ^ x mod p
  * 
  */    
 _openssl_BN 
 _openssl_BN::_exp(const _openssl_BN& x, const _openssl_BN& p) const
 {
+    _openssl_BN res;
 
+    ///< res = this ^ x mod p
+    BN_mod_exp(res._ptr, this->_ptr, x._ptr, p._ptr, _ctx);
+
+    return res;
 }
 
 /**
- * @fn
- * @brief
+ * @fn      void _openssl_BN::_expInplace(const _openssl_BN& x, const _openssl_BN& p) 
+ * @brief   this = this ^ x mod p
  * 
  */
 void 
 _openssl_BN::_expInplace(const _openssl_BN& x, const _openssl_BN& p) 
 {
+    ///< this = this ^ x mod p
+    BN_mod_exp(this->_ptr, this->_ptr, x._ptr, p._ptr, _ctx);
 
+    return;
 }
 
 /**
- * @fn
- * @brief
+ * @fn      _openssl_BN _openssl_BN::_negate(const _openssl_BN& p) const
+ * @brief   return p - this
  * 
  */
 _openssl_BN 
-_negate(const _openssl_BN& p) const
+_openssl_BN::_negate(const _openssl_BN& p) const
 {
     _openssl_BN res;
 
@@ -490,12 +484,12 @@ _negate(const _openssl_BN& p) const
 }
 
 /**
- * @fn
- * @brief
+ * @fn      void _openssl_BN::_negateInplace(const _openssl_BN& p)
+ * @brief   this = p - this
  * 
  */
 void 
-_negateInplace(const _openssl_BN& p)
+_openssl_BN::_negateInplace(const _openssl_BN& p)
 {
     if (BN_is_zero(_ptr)) {
         return;
@@ -504,4 +498,86 @@ _negateInplace(const _openssl_BN& p)
     BN_sub(_ptr, p._ptr, _ptr);
 
     return;
+}
+
+/**
+ * @fn      bool _openssl_BN::_isPrime(void) const
+ * @brief   The Miller-Rabin primality test
+ * 
+ */
+bool 
+_openssl_BN::_isPrime(void) const
+{
+    ///< run the Miller-Rabin probabilistic primality test
+    ///< the iteration number is 64 by default
+     if (0 < BN_is_prime_ex(this->_ptr, BN_prime_checks, _ctx, 0)) {
+         return true;
+     }
+     else {
+         return false;
+     }
+}
+
+/**
+ * @fn      bool _openssl_BN::_isOne(void) const
+ * @brief   check if this == 1
+ * 
+ */
+bool
+_openssl_BN::_isOne(void) const 
+{ 
+    if (BN_is_one(_ptr)) {
+        return true;
+    } else {
+        return false;
+    }
+} 
+
+/**
+ * @fn      bool _openssl_BN::_isZero(void) const
+ * @brief   check if this == 0
+ * 
+ */
+bool
+_openssl_BN::_isZero(void) const 
+{ 
+    if (BN_is_zero(_ptr)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/**
+ * @fn      bool _openssl_BN::operator==(const _openssl_BN& rhs)
+ * @brief   == operator
+ * 
+ */
+bool 
+_openssl_BN::operator==(const _openssl_BN& rhs)
+{
+    ///< check if this == rhs
+    if (0 != BN_cmp(this->_ptr, rhs._ptr)) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+/**
+ * @fn      bool _openssl_BN::operator!=(const _openssl_BN& rhs)
+ * @brief   != operator
+ * 
+ */
+bool
+_openssl_BN::operator!=(const _openssl_BN& rhs)
+{
+    if (*this == rhs) {
+        return false;
+    }
+    else {
+        return true;
+    }
 }
