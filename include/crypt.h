@@ -43,12 +43,22 @@ public:
     void _randomInplace(const _openssl_BN& range);
     void _randomInplace(const int bits);
     ///< arithmetic operations
-    _openssl_BN _mod(const _openssl_BN& x, const _openssl_BN& p);
+    _openssl_BN _mod(const _openssl_BN& x, const _openssl_BN& p) const;
     void _modInplace(const _openssl_BN& p);
-    _openssl_BN _add(const _openssl_BN& x, const _openssl_BN& p);           ///< return this + x mod p
-    void _addInplace(const _openssl_BN& x, const _openssl_BN& p);           ///< this = this + x mod p
+    _openssl_BN _negate(const _openssl_BN& p) const;                                ///< return -this mod p
+    void _negateInplace(const _openssl_BN& p);                                      ///< this = -this mod p
+    _openssl_BN _add(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this + x mod p
+    void _addInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this + x mod p
+    _openssl_BN _sub(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this - x mod p
+    void _subInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this - x mod p
+    _openssl_BN _mul(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this * x mod p
+    void _mulInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this * x mod p
+    _openssl_BN _inverse(const _openssl_BN& p) const;                               ///< return this^{-1} mod p
+    void _inverseInplace(const _openssl_BN& p);                                     ///< this = this^{-1} mod p
+    _openssl_BN _exp(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this ^ x mod p
+    void _expInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this ^ x mod p
     ///< overloading arith. operations
-    _openssl_BN& operator=(const int rhs);                                  ///< this <- rhs
+    _openssl_BN& operator=(const int rhs);                                          ///< this <- rhs
     _openssl_BN& operator=(const _openssl_BN& rhs);     
 
     ///< input
