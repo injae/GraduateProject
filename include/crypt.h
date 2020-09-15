@@ -36,10 +36,10 @@ public:
     _openssl_BN(const u_int8_t* bytes, const size_t len);
     virtual ~_openssl_BN(void);
 
-    static inline _openssl_BN _one(void) {return _openssl_BN(1);}           ///< singleton
-    static inline _openssl_BN _zero(void) {return _openssl_BN(0);}          ///< singleton
-    inline bool _isOne(void) const; 
-    inline bool _isZero(void) const;    
+    static _openssl_BN _one(void) {return _openssl_BN(1);}           ///< singleton
+    static _openssl_BN _zero(void) {return _openssl_BN(0);}          ///< singleton
+    bool _isOne(void) const; 
+    bool _isZero(void) const;    
 
     ///< size
     int _getByteSize(void) const;
@@ -48,6 +48,7 @@ public:
     ///< choose a random and store itself
     void _randomInplace(const _openssl_BN& range);
     void _randomInplace(const int bits);
+
     ///< arithmetic operations
     _openssl_BN _mod(const _openssl_BN& p) const;
     void _modInplace(const _openssl_BN& p);
@@ -63,8 +64,11 @@ public:
     void _invInplace(const _openssl_BN& p);                                         ///< this = this^{-1} mod p
     _openssl_BN _exp(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this ^ x mod p
     void _expInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this ^ x mod p
+
     ///< primality test
     bool _isPrime(void) const;
+    _openssl_BN _gcd(const _openssl_BN& x) const;                                   ///< gcd(this, x)
+
     ///< overloading operations
     _openssl_BN& operator=(const int rhs);                                          ///< this <- rhs
     _openssl_BN& operator=(const _openssl_BN& rhs);     
