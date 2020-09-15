@@ -54,12 +54,31 @@ main(int argc, char** argv)
     cout << "A prime number: [" << p._bn2hex() << "]" << endl;
 
     ///< arithmetic
-    _openssl_BN r, s, t;
-    std::cout << "4. ## Addition ##" << std::endl;
+    _openssl_BN r, s, t, u, v, w;
+    std::cout << "4. ## Addition and Subtraction ##" << std::endl;
     r._randomInplace(lambda);
-    cout << "a =         [" << r._bn2hex() << endl;
+    cout << "a =         [" << r._bn2hex() << "]" << endl;
     s = r._add(c, p);           
-    cout << "c = a + 1 = [" << s._bn2hex() << endl;
+    cout << "c = a + 1 = [" << s._bn2hex() << "]" << endl;
+
+    std::cout << "5. ## Multiplication and Division (= Inverse) ##" << std::endl;
+    _openssl_BN one(1);
+    t = s._gcd(p);                                          ///< t = gcd(s, p)
+    while (true != t._isOne()) {
+        s._add(one, p);                                     ///< s++
+        t = s._gcd(p);
+    }
+    cout << "s =   [" << s._bn2hex() << "]" << endl;
+    v = s._inv(p);
+    cout << "1/s = [" << v._bn2hex() << "]" << endl;
+    v._mulInplace(s, p);
+    cout << "s * 1/s = [" << v._bn2hex() << "]" << endl;
+
+    std::cout << "6. ## Exponentiation ##" << std::endl;
+    _openssl_BN p_minus_1 = p._sub(one, p);
+
+    w = v._exp(p_minus_1, p);
+    cout << "s^{p-1} = [" << w._bn2hex() << "]" << endl;    ///< recall Fermat's little theorem
 
     return 1;
 }
