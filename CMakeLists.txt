@@ -1,53 +1,55 @@
-#[[
-@file   CMakeLists.txt
-@brief  the root cmake file
-@date   Sep. 1, 2020
-@author Myungsun Kim
+cmake_minimum_required(VERSION 3.12)
 
-        This CMakeLists.txt file is customized to build a sample code for supporting the graduate project.
-        For the other purpose of use, you need to modify the file properly.
-]]
-
-cmake_minimum_required (VERSION 3.1)
-project (gp2020fall
-         VERSION 0.0.1
-         DESCRIPTION "a sample code for helping graduate project"
-         # I am only considering C++ language in this implemetation
-         LANGUAGES CXX)    
-
-# compile options
-# for debig mode
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -O3")
-# for release mode
-#set(CMAKE_CXX_FLAGS "-std=c++11 -g -O0 ${CMAKE_CXX_FLAGS}")
-
-# openssl options
-# the below folder structures are only for me
-# so, after checking or installing openssl's home directory, properly alter the correspondings
-find_path(
-    OPENSSL_INCLUDE_DIR openssl/ec.h
-    NAMES openssl/sha.h openssl/bn.h
-    PATH_SUFFIXES include
-    PATHS
-    /usr/local/Cellar/openssl@1.1/1.1.1g/           # if necessary, append your openssl path
-    NO_DEFAULT_PATH
+set(CPPM_VERSION 0.0.12)
+include(cmake/cppm_loader.cmake)
+cppm_project()
+include(HunterGate)
+HunterGate(
+   URL https://github.com/cpp-pm/hunter/archive/v0.23.269.tar.gz
+   SHA1 64024b7b95b4c86d50ae05b926814448c93a70a0
 )
-find_library(
-    OPENSSL_LIBRARY libcrypto.a
-    PATH_SUFFIXES lib
-    PATHS
-    /usr/local/Cellar/openssl@1.1/1.1.1g/           # if necessary, append your openssl path
-    NO_DEFAULT_PATH
+project(jogyu VERSION 0.0.1 LANGUAGES C CXX)
+cppm_setting()
+cppm_cxx_standard(17)
+cppm_compiler_option(DEFAULT)
+
+find_cppkg(OpenSSL git  MODULE ${OPENSSL_LIBRARY} TYPE lib)
+find_cppkg(asio latest  MODULE asio::asio_shared HUNTER TYPE lib)
+find_cppkg(fmt 7.0.3  MODULE fmt::fmt TYPE lib)
+find_cppkg(mariadbclientpp git  MODULE mariadbclientpp::mariadbclientpp TYPE lib)
+find_cppkg(range-v3 0.11.0  MODULE range-v3::range-v3 TYPE lib)
+
+
+cppm_target_define(client BINARY
+SOURCES
+    src/client/main.cpp
+    src/db/connector.hpp
+    src/db/connector.cpp
+    src/secure/hash.hpp
+    src/secure/crypt.h
+    src/secure/crypt.cc
 )
 
-find_package(OPENSSL REQUIRED)
-if(OPENSSL_FOUND)
-    message (STATUS "::OpenSSL Include directories: " ${OPENSSL_INCLUDE_DIR})
-    include_directories(${OPENSSL_INCLUDE_DIR})
-else()
-    message (OPENSSL_ERROR "::OpenSSL Not found :-(")
-endif()
+cppm_target_define(server BINARY
+SOURCES
+    src/server/server.hpp
+    src/server/main.cpp
+    src/db/connector.hpp
+    src/db/connector.cpp
+    src/secure/hash.hpp
+    src/secure/crypt.h
+    src/secure/crypt.cc
+)
 
-# the project's entire directory structure.
-add_subdirectory (src)
-add_subdirectory (tests)
+
+set(global_deps PUBLIC OpenSSL asio fmt mariadbclientpp range-v3)
+cppm_target_dependencies(client
+   ${global_deps})
+
+cppm_target_dependencies(server
+   ${global_deps})
+
+
+cppm_target_install(client)
+cppm_target_install(server)
+

@@ -1,0 +1,7 @@
+[OpenSSL]
+    version="git"
+    #module="OpenSSL::SSL OpenSSL::Crypto"
+    module="${OPENSSL_LIBRARY}"
+    #components="SSL Crypto"
+    description=""
+    custom=true

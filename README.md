@@ -18,10 +18,8 @@ openssl은 기술적인 이유에 의하여 ANSI C로 구현되어 있으나, �
 - Programming 언어: clang++ version=11.0.0
 
 ## 사용법
-1. openssl의 install
-    - `bew install openssl`
-    - Default installed folder (only for me): `/usr/local/Cellar/openssl@1.1/1.1.1g`이며 가능하면 기억해 놓는 것이 편리하다.
-2. `% ./tests/test`
+1. mariadb install
+   - `brew install mariadb`
 
 <!---
 <span style="font-family: Courier;">brew install openssl</span>

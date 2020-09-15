@@ -6,37 +6,37 @@
 -->
 
 ### Class
-1. Class 이름은 **_ClassName**
+1. Class 이름은 **ClassName**
     >~~~cpp
-    > class _ClassName
+    > class ClassName
     > {
     >   ...
     > };
     >~~~
 2. class의 member function과 변수들
     * Variables:
-        - public: **_PublicName**,
-        - protected: **ProtectedName_**,
-        - private: **PrivateName__**
+        - public: **public_name**,
+        - protected: **protected_name_**,
+        - private: **private_name_**
         >~~~cpp
         > template <class T>
-        > class _ClassName
+        > class ClassName
         > {
         > ///
         > public:
         >     function declarations;
         > ///
         > public:
-        >     int32_t _a;       /// public
+        >     int32_t a;       /// public
         >     std::string b_;   /// protected
-        >     T c__;            /// private
+        >     T c_;            /// private
         > };
     * Functions: 위와 같이하고 가능하면 **동사** 소문자로 시작합니다.
-        - public: **_doSomething(...)**
+        - public: **do_something(...)**
         - function의 구현은 다음 정도의 모양을 유지하도록 사용했습니다.
         > ~~~cpp
         > return_type
-        > _ClassName::_doSomething(arguments_list)
+        > ClassName::do_something(arguments_list)
         >{
         >   uint32_t a = 0;
         >   uint8_t* b = nullptr;

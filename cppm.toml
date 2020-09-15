@@ -1,0 +1,18 @@
+[package]
+   name = "jogyu"
+   version = "0.0.1"
+   description = ""
+
+[[bin]]
+   name = "client"
+   source = ["src/client/.*", "src/db/.*", "src/secure/.*"]
+[[bin]]
+   name = "server"
+   source = ["src/server/.*", "src/db/.*", "src/secure/.*"]
+
+[dependencies]
+    fmt="7.0.3"
+    OpenSSL="git"
+    asio={module="asio::asio_shared",repo="hunter"}
+    range-v3="0.11.0"
+    mariadbclientpp="git"
