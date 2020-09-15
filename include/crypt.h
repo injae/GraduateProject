@@ -32,6 +32,7 @@ public:
     _openssl_BN(void);
     _openssl_BN(const int rhs);
     _openssl_BN(const _openssl_BN& rhs);
+    // _openssl_BN(const _openssl_BN& rhs, const _openssl_BN& modulus);
     _openssl_BN(const u_int8_t* bytes, const size_t len);
     virtual ~_openssl_BN(void);
 
@@ -94,7 +95,7 @@ private:
 public:
     BN_CTX* _ctx;       ///< context
     BIGNUM* _ptr;       ///< pointer to the big number 
-    // BIGNUM* _modp;      ///< the modulus prime p
+    // BIGNUM* _p;         ///< the modulus prime p
 protected:
 private:
 };
