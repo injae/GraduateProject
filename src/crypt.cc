@@ -581,3 +581,19 @@ _openssl_BN::operator!=(const _openssl_BN& rhs)
         return true;
     }
 }
+
+/**
+ * @fn      _openssl_BN _openssl_BN::_gcd(const _openssl_BN& x) const
+ * @brief   return gcd(this, x)
+ * 
+ */
+_openssl_BN
+_openssl_BN::_gcd(const _openssl_BN& x) const
+{
+    _openssl_BN res;
+
+    ///< res = gcd(this, x)
+    BN_gcd(res._ptr, this->_ptr, x._ptr, _ctx);
+
+    return res;
+}
