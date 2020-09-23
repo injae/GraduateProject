@@ -23,11 +23,14 @@ find_cppkg(range-v3 0.11.0  MODULE range-v3::range-v3 TYPE lib)
 cppm_target_define(client BINARY
 SOURCES
     src/client/main.cpp
+    src/client/;
     src/db/connector.hpp
     src/db/connector.cpp
     src/secure/hash.hpp
+    src/secure/psi.cpp
     src/secure/crypt.h
     src/secure/crypt.cc
+    src/secure/psi.hpp
 )
 
 cppm_target_define(server BINARY
@@ -37,9 +40,37 @@ SOURCES
     src/db/connector.hpp
     src/db/connector.cpp
     src/secure/hash.hpp
+    src/secure/psi.cpp
     src/secure/crypt.h
     src/secure/crypt.cc
+    src/secure/psi.hpp
 )
+
+cppm_unit_test_area()
+if(JOGYU_BUILD_TESTING)
+
+cppm_target_define(crypt-test BINARY
+SOURCES
+    tests/test.cc
+    src/secure/hash.hpp
+    src/secure/psi.cpp
+    src/secure/crypt.h
+    src/secure/crypt.cc
+    src/secure/psi.hpp
+)
+
+cppm_target_define(logic_test BINARY
+SOURCES
+    tests/logic_test.cpp
+    src/secure/hash.hpp
+    src/secure/psi.cpp
+    src/secure/crypt.h
+    src/secure/crypt.cc
+    src/secure/psi.hpp
+)
+
+endif()
+end_cppm_unit_test_area()
 
 
 set(global_deps PUBLIC OpenSSL asio fmt mariadbclientpp range-v3)
@@ -47,6 +78,12 @@ cppm_target_dependencies(client
    ${global_deps})
 
 cppm_target_dependencies(server
+   ${global_deps})
+
+cppm_target_dependencies(crypt-test
+   ${global_deps})
+
+cppm_target_dependencies(logic_test
    ${global_deps})
 
 

@@ -9,27 +9,26 @@
 
 #include <iostream>
 #include <cstdio>
+#include <fmt/format.h>
 
-#include "crypt.h"
+#include "secure/crypt.h"
+#include "secure/psi.hpp"
 
-int 
-main(int argc, char** argv)
+int main(int argc, char** argv)
 {
     using std::cout;
     using std::endl;
 
     uint8_t     bytes[1000] = {0};
-    _openssl_BN a, b(100), c = 1;
+    BN a, b(100), c = 1;
     int         len = 0, lambda = 2048, count = 0;
-
-    
 
     ///< random test
     std::cout << "1. ## Random Generation ##" << std::endl;
-    a._randomInplace(1024);
-    std::cout << "size in bytes: " << a._getByteSize() << std::endl;
-    std::cout << "number in hex: [" << a._bn2hex() << "]" << std::endl;
-    a._bn2byte(bytes, &len);
+    a.random_inplace(1024);
+    std::cout << "size in bytes: " << a.byte_size() << std::endl;
+    std::cout << "number in hex: [" << a.to_hex() << "]" << std::endl;
+    a.to_bytes(bytes, &len);
     std::cout << "into a binary string of size " << len << " : [";
     for (auto i = 0; i < len; i++) {
         std::printf("%02X", bytes[i]);
@@ -38,47 +37,47 @@ main(int argc, char** argv)
 
     ///< assignment
     std::cout << "2. ## Assignment ##" << std::endl;
-    _openssl_BN d = a;
-    std::cout << "number in hex: [" << d._bn2hex() << "]" << std::endl << std::endl;
+    BN d = a;
+    std::cout << "number in hex: [" << d.to_hex() << "]" << std::endl << std::endl;
 
     ///< generate a prime of lenght lambda
     std::cout << "3. ## Prime generation ##" << std::endl;
-    _openssl_BN p;
-    p._randomInplace(lambda);
+    BN p;
+    p.random_inplace(lambda);
     while (true) {
         count += 1;
-        if (p._isPrime()) break;
-        p._randomInplace(lambda);
+        if (p.is_prime()) break;
+        p.random_inplace(lambda);
     }
     cout << "The total trial number: " << count << endl;
-    cout << "A prime number: [" << p._bn2hex() << "]" << endl;
+    cout << "A prime number: [" << p.to_hex() << "]" << endl;
 
     ///< arithmetic
-    _openssl_BN r, s, t, u, v, w;
+    BN r, s, t, u, v, w;
     std::cout << "4. ## Addition and Subtraction ##" << std::endl;
-    r._randomInplace(lambda);
-    cout << "a =         [" << r._bn2hex() << "]" << endl;
-    s = r._add(c, p);           
-    cout << "c = a + 1 = [" << s._bn2hex() << "]" << endl;
+    r.random_inplace(lambda);
+    cout << "a =         [" << r.to_hex() << "]" << endl;
+    s = r.add(c, p);           
+    cout << "c = a + 1 = [" << s.to_hex() << "]" << endl;
 
     std::cout << "5. ## Multiplication and Division (= Inverse) ##" << std::endl;
-    _openssl_BN one(1);
-    t = s._gcd(p);                                          ///< t = gcd(s, p)
-    while (true != t._isOne()) {
-        s._add(one, p);                                     ///< s++
-        t = s._gcd(p);
+    BN one(1);
+    t = s.gcd(p);                                          ///< t = gcd(s, p)
+    while (true != t.is_one()) {
+        s.add(one, p);                                     ///< s++
+        t = s.gcd(p);
     }
-    cout << "s =   [" << s._bn2hex() << "]" << endl;
-    v = s._inv(p);
-    cout << "1/s = [" << v._bn2hex() << "]" << endl;
-    v._mulInplace(s, p);
-    cout << "s * 1/s = [" << v._bn2hex() << "]" << endl;
-
+    cout << "one =   [" << one.to_hex() << "]" << endl;
+    cout << "s =   [" << s.to_hex() << "]" << endl;
+    v = s.inv(p);
+    cout << "1/s = [" << v.to_hex() << "]" << endl;
+    v.mul_inplace(s, p);
+    cout << "s * 1/s = [" << v.to_hex() << "]" << endl;
     std::cout << "6. ## Exponentiation ##" << std::endl;
-    _openssl_BN p_minus_1 = p._sub(one, p);
+    BN p_minus_1 = p.sub(one, p);
 
-    w = v._exp(p_minus_1, p);
-    cout << "s^{p-1} = [" << w._bn2hex() << "]" << endl;    ///< recall Fermat's little theorem
+    w = v.exp(p_minus_1, p);
+    cout << "s^{p-1} = [" << w.to_hex() << "]" << endl;    ///< recall Fermat's little theorem
 
     return 1;
 }

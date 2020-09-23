@@ -6,9 +6,18 @@
 [[bin]]
    name = "client"
    source = ["src/client/.*", "src/db/.*", "src/secure/.*"]
+
 [[bin]]
    name = "server"
    source = ["src/server/.*", "src/db/.*", "src/secure/.*"]
+
+[[test]]
+    name   = "crypt-test"
+    source = ["tests/test.cc", "src/secure/.*"]
+
+[[test]]
+    name   = "logic_test"
+    source = ["tests/logic_test.cpp", "src/secure/.*"]
 
 [dependencies]
     fmt="7.0.3"

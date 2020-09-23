@@ -24,72 +24,77 @@
  *          If more reality is persued, the modulus p had better be embedded into the class
  *          Therefore, if possible I hope that you freely modify this class at your disposal
  */
-class _openssl_BN
+class BN
 {
 ///<
 public:
     ///< ctors and dtor
-    _openssl_BN(void);
-    _openssl_BN(const int rhs);
-    _openssl_BN(const _openssl_BN& rhs);
+    BN(void);
+    BN(const int rhs);
+    BN(const BN& rhs);
     // _openssl_BN(const _openssl_BN& rhs, const _openssl_BN& modulus);
-    _openssl_BN(const u_int8_t* bytes, const size_t len);
-    virtual ~_openssl_BN(void);
+    BN(const u_int8_t* bytes, const size_t len);
+    virtual ~BN(void);
 
-    static _openssl_BN _one(void) {return _openssl_BN(1);}           ///< singleton
-    static _openssl_BN _zero(void) {return _openssl_BN(0);}          ///< singleton
-    bool _isOne(void) const; 
-    bool _isZero(void) const;    
+    static BN one(void) {return BN(1);}           ///< singleton
+    static BN zero(void) {return BN(0);}          ///< singleton
+    bool is_one(void) const; 
+    bool is_zero(void) const;    
 
     ///< size
-    int _getByteSize(void) const;
-    int _getBitSize(void) const;
+    int byte_size(void) const;
+    int bit_size(void) const;
 
     ///< choose a random and store itself
-    void _randomInplace(const _openssl_BN& range);
-    void _randomInplace(const int bits);
+    void random_inplace(const BN& range);
+    void random_inplace(const int bits);
+    void random_safe_prime_inplace(const int bits);
+
+    ///< shift
+    BN rshift_one();
+    BN lshift_one();
 
     ///< arithmetic operations
-    _openssl_BN _mod(const _openssl_BN& p) const;
-    void _modInplace(const _openssl_BN& p);
-    _openssl_BN _negate(const _openssl_BN& p) const;                                ///< return -this mod p
-    void _negateInplace(const _openssl_BN& p);                                      ///< this = -this mod p
-    _openssl_BN _add(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this + x mod p
-    void _addInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this + x mod p
-    _openssl_BN _sub(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this - x mod p
-    void _subInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this - x mod p
-    _openssl_BN _mul(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this * x mod p
-    void _mulInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this * x mod p
-    _openssl_BN _inv(const _openssl_BN& p) const;                                   ///< return this^{-1} mod p
-    void _invInplace(const _openssl_BN& p);                                         ///< this = this^{-1} mod p
-    _openssl_BN _exp(const _openssl_BN& x, const _openssl_BN& p) const;             ///< return this ^ x mod p
-    void _expInplace(const _openssl_BN& x, const _openssl_BN& p);                   ///< this = this ^ x mod p
-
+    BN mod(const BN& p) const;
+    void mod_inplace(const BN& p);
+    BN negate(const BN& p) const;                                ///< return -this mod p
+    void negate_inplace(const BN& p);                                      ///< this = -this mod p
+    BN add(const BN& x, const BN& p) const;             ///< return this + x mod p
+    void add_inplace(const BN& x, const BN& p);                   ///< this = this + x mod p
+    BN sub(const BN& x, const BN& p) const;             ///< return this - x mod p
+    void sub_inplace(const BN& x, const BN& p);                   ///< this = this - x mod p
+    BN mul(const BN& x, const BN& p) const;             ///< return this * x mod p
+    void mul_inplace(const BN& x, const BN& p);                   ///< this = this * x mod p
+    BN inv(const BN& p) const;                                   ///< return this^{-1} mod p
+    void inv_inplace(const BN& p);                                         ///< this = this^{-1} mod p
+    BN exp(const BN& x, const BN& p) const;             ///< return this ^ x mod p
+    void exp_inplace(const BN& x, const BN& p);                   ///< this = this ^ x mod p
     ///< primality test
-    bool _isPrime(void) const;
-    _openssl_BN _gcd(const _openssl_BN& x) const;                                   ///< gcd(this, x)
+    bool is_prime(void) const;
+    BN gcd(const BN& x) const;                                   ///< gcd(this, x)
 
     ///< overloading operations
-    _openssl_BN& operator=(const int rhs);                                          ///< this <- rhs
-    _openssl_BN& operator=(const _openssl_BN& rhs);     
+    BN& operator=(const int rhs);                                          ///< this <- rhs
+    BN& operator=(const BN& rhs);     
 
-    bool operator==(const _openssl_BN& rhs);
-    bool operator!=(const _openssl_BN& rhs);
+    bool operator==(const BN& rhs);
+    bool operator!=(const BN& rhs);
 
     // _openssl_BN& operator+=(const _openssl_BN& rhs);
     // _openssl_BN& operator-=(const _openssl_BN& rhs);
     // _openssl_BN& operator*=(const _openssl_BN& rhs);
 
     ///< input
-    void _dec2bn(const char* dec);
-    void _hex2bn(const char* hex);
-    void _byte2bn(const uint8_t* bytes, const int len);                
+    void from_dec(const char* dec);
+    void from_hex(const char* hex);
+    void from_bytes(const uint8_t* bytes, const int len);                
     ///< output
-    std::string _bn2dec(const _openssl_BN& bn) const;
-    std::string _bn2hex(const _openssl_BN& bn) const;    
-    std::string _bn2dec(void) const;
-    std::string _bn2hex(void) const;
-    void _bn2byte(uint8_t* bytes, int* len) const;
+    std::string bn_to_dec(const BN& bn) const;
+    std::string bn_to_hex(const BN& bn) const;    
+    std::string to_dec(void) const;
+    std::string to_hex(void) const;
+    void to_bytes(uint8_t* bytes, int* len) const;
+    std::vector<uint8_t> to_bytes();
 
 protected:
 private:
@@ -103,5 +108,4 @@ public:
 protected:
 private:
 };
-
 #endif //__CrYpT_H

@@ -13,7 +13,6 @@ int main(int argc, char* argv[]) {
     
     std::string data = "aaaaaaaaaaa";
     auto hash = hash::Sha256().hash(data);
-    fmt::print("{}->{} == {},{}\n",data, hash, hash.length(), hash.size());
     //auto data = db::PrivateSet{"hello",10,20};
 
     asio::io_context ctx;
