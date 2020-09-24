@@ -18,10 +18,12 @@ namespace psi {
         inline BN r() { return PublicKeys::r(q); }
 
         // random in range(q)
-        inline static BN r(const BN& q) { BN r; r.random_inplace(q); return r; }
-
-        // H1(x) L= g0^x (mod p)
-        inline BN H1(BN& x) { return g0.exp(x, p);}
+        inline static BN r(const BN& q) { BN r;
+            do {r.random_inplace(q);}while(r.is_zero());
+            return r;
+        }
+        // H1(x) = h = g0^x (mod p)
+        inline BN H1(BN &x) {return g0.exp(x, p);}
     };
 
     struct ProofValue {
