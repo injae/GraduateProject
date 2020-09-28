@@ -32,6 +32,12 @@ namespace psi {
         BN z1;
     };
 
+    struct EqualValue {
+        BN b0;
+        BN b1;
+        BN z;
+    };
+
     // H(bsn), ex) H3(a || b|| c) == H(vector{a, b,c})
     BN H(std::vector<BN>&& bns); 
 
@@ -44,7 +50,8 @@ namespace psi {
     BN H1(PublicKeys& keys, BN& x);
 
     // pi_eq := (β0, β1, z) pub keys (p,g,q,y0,y1) y0 = g0^x (mod p), y1 = g1^x (mod p)
-    std::tuple<BN,BN,BN> equal_prover(BN& p, BN& g0, BN& g1, BN& q, BN& x, BN& y0, BN& y1);
+    EqualValue equal_prover(BN& p, BN& g0, BN& g1, BN& q, BN& x, BN& y0, BN& y1);
+    bool equal_verifier(EqualValue& pi, BN& p, BN& g0, BN& g1, BN& q, BN y0, BN y1);
 
     // pi2(β, z0, z1) = g1^r0*g2^r1
     ProofValue two_prover(BN& p, BN& g0, BN& g1, BN& q, BN& x0, BN x1, BN& y);

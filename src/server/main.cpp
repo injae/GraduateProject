@@ -1,31 +1,35 @@
 #include <iostream>
-#include <server/server.hpp>
-#include <db/connector.hpp>
-
 #include <memory>
-#include <openssl/sha.h>
-#include "secure/hash.hpp"
-#include <fmt/format.h>
 
-using socket_ptr = std::shared_ptr<asio::ip::tcp::socket>;
+
+#include <fmt/format.h>
+#include <openssl/sha.h>
+#include <nlohmann/json.hpp>
+
+#include "secure/hash.hpp"
+#include "server/server.hpp"
+#include "db/connector.hpp"
+
+#include <thread>
+#include <zmqpp/zmqpp.hpp>
+
 
 int main(int argc, char* argv[]) {
-    
-    std::string data = "aaaaaaaaaaa";
-    auto hash = hash::Sha256().hash(data);
-    //auto data = db::PrivateSet{"hello",10,20};
+    using namespace nlohmann;
 
-    asio::io_context ctx;
-    auto acceptor = asio::ip::tcp::acceptor(ctx, {asio::ip::tcp::v4(), 20001});
-    auto socket = std::make_shared<asio::ip::tcp::socket>(asio::ip::tcp::socket(ctx));
+    zmqpp::context context;
+    zmqpp::socket socket (context, zmqpp::socket_type::rep);
+    socket.bind("tcp://*:66555");
+    while(true) {
+        zmqpp::message msg;
+        socket.receive(msg);
+        std::string pk;
+        msg >> pk;
+        std::cout << pk << std::endl;
+        fmt::print("{}",pk);
+        socket.send("hello");
+        std::cout << "send all" << std::endl;
+    }
 
-    acceptor.async_accept(*socket, [](const auto& e) {
-        if(e) {fmt::print("{}",e.message()); return;}
-        fmt::print("connect");
-    });
-    //        asio::async_write(socket, asio::buffer(hash), [](auto e) { });
-
-    ctx.run();
-
-    return 0; 
+    return 0;
 }

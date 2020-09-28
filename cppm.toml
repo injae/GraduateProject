@@ -11,10 +11,10 @@
    name = "server"
    source = ["src/server/.*", "src/db/.*", "src/secure/.*"]
 
-[[test]]
-    name   = "crypt-test"
-    source = ["tests/test.cc", "src/secure/.*"]
-
+#[[test]]
+#    name   = "crypt-test"
+#    source = ["tests/test.cc", "src/secure/.*"]
+#
 [[test]]
     name   = "logic_test"
     source = ["tests/logic_test.cpp", "src/secure/.*"]
@@ -22,6 +22,7 @@
 [dependencies]
     fmt="7.0.3"
     OpenSSL="git"
-    asio={module="asio::asio_shared",repo="hunter"}
+    zmqpp="git"
     range-v3="0.11.0"
     mariadbclientpp="git"
+    nlohmann_json="3.9.1"

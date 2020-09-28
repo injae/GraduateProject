@@ -7,8 +7,8 @@
  * 
 \* ************************************************************************************************************************************ */
 
-#ifndef __CrYpT_H
-#define __CrYpT_H
+#ifndef __SECURE_CRYPT_H__
+#define __SECURE_CRYPT_H__
 
 #include <string>
 #include <cstdint>
@@ -32,7 +32,7 @@ public:
     BN(void);
     BN(const int rhs);
     BN(const BN& rhs);
-    // _openssl_BN(const _openssl_BN& rhs, const _openssl_BN& modulus);
+    // BN(const _openssl_BN& rhs, const _openssl_BN& modulus);
     BN(const u_int8_t* bytes, const size_t len);
     virtual ~BN(void);
 
@@ -57,24 +57,24 @@ public:
     ///< arithmetic operations
     BN mod(const BN& p) const;
     void mod_inplace(const BN& p);
-    BN negate(const BN& p) const;                                ///< return -this mod p
-    void negate_inplace(const BN& p);                                      ///< this = -this mod p
-    BN add(const BN& x, const BN& p) const;             ///< return this + x mod p
-    void add_inplace(const BN& x, const BN& p);                   ///< this = this + x mod p
-    BN sub(const BN& x, const BN& p) const;             ///< return this - x mod p
-    void sub_inplace(const BN& x, const BN& p);                   ///< this = this - x mod p
-    BN mul(const BN& x, const BN& p) const;             ///< return this * x mod p
-    void mul_inplace(const BN& x, const BN& p);                   ///< this = this * x mod p
-    BN inv(const BN& p) const;                                   ///< return this^{-1} mod p
-    void inv_inplace(const BN& p);                                         ///< this = this^{-1} mod p
-    BN exp(const BN& x, const BN& p) const;             ///< return this ^ x mod p
-    void exp_inplace(const BN& x, const BN& p);                   ///< this = this ^ x mod p
+    BN negate(const BN& p=NULL) const;                       ///< return -this mod p
+    void negate_inplace(const BN& p=NULL);                   ///< this = -this mod p
+    BN add(const BN& x, const BN& p=NULL) const;             ///< return this + x mod p
+    void add_inplace(const BN& x, const BN& p=NULL);         ///< this = this + x mod p
+    BN sub(const BN& x, const BN& p=NULL) const;             ///< return this - x mod p
+    void sub_inplace(const BN& x, const BN& p=NULL);         ///< this = this - x mod p
+    BN mul(const BN& x, const BN& p=NULL) const;             ///< return this * x mod p
+    void mul_inplace(const BN& x, const BN& p=NULL);         ///< this = this * x mod p
+    BN inv(const BN& p=NULL) const;                          ///< return this^{-1} mod p
+    void inv_inplace(const BN& p=NULL);                      ///< this = this^{-1} mod p
+    BN exp(const BN& x, const BN& p=NULL) const;             ///< return this ^ x mod p
+    void exp_inplace(const BN& x, const BN& p=NULL);         ///< this = this ^ x mod p
     ///< primality test
     bool is_prime(void) const;
-    BN gcd(const BN& x) const;                                   ///< gcd(this, x)
+    BN gcd(const BN& x) const;                          ///< gcd(this, x)
 
     ///< overloading operations
-    BN& operator=(const int rhs);                                          ///< this <- rhs
+    BN& operator=(const int rhs);                       ///< this <- rhs
     BN& operator=(const BN& rhs);     
 
     bool operator==(const BN& rhs);
@@ -87,7 +87,8 @@ public:
     ///< input
     void from_dec(const char* dec);
     void from_hex(const char* hex);
-    void from_bytes(const uint8_t* bytes, const int len);                
+    void from_bytes(const uint8_t* bytes, const int len);
+
     ///< output
     std::string bn_to_dec(const BN& bn) const;
     std::string bn_to_hex(const BN& bn) const;    
@@ -101,11 +102,10 @@ private:
     // void setModulus__(void);
 
 ///<
-public:
+private:
     BN_CTX* _ctx;       ///< context
     BIGNUM* _ptr;       ///< pointer to the big number 
     // BIGNUM* _p;         ///< the modulus prime p
 protected:
-private:
 };
-#endif //__CrYpT_H
+#endif 

@@ -11,7 +11,7 @@
 #include <cstring>
 #include <fmt/format.h>
 
-#include "crypt.h"
+#include "secure/crypt.h"
 
 /**
  * @fn      _openssl_BN::_openssl_BN(void)
@@ -77,8 +77,7 @@ BN::~BN(void)
  * @brief   pick a random number and store itself
  * 
  */
-void
-BN::random_inplace(const BN& range)
+void BN::random_inplace(const BN& range)
 {
     ///< pick a random value between 0 and range and store itself
     BN_rand_range(_ptr, range._ptr);
@@ -230,8 +229,7 @@ BN::from_hex(const char* hex)
  * @param   len     length
  * 
  */
-void
-BN::from_bytes(const uint8_t* bytes, const int len)
+void BN::from_bytes(const uint8_t* bytes, const int len)
 {
     assert(0 != _ptr);
     BN_bin2bn(bytes, len, this->_ptr);
@@ -244,8 +242,7 @@ BN::from_bytes(const uint8_t* bytes, const int len)
  * @brief   convert an openssl big num into a decimal string
  * 
  */
-std::string
-BN::to_dec(void) const
+std::string BN::to_dec(void) const
 {
     std::string res = "";
     char*       dec = 0;
@@ -258,13 +255,7 @@ BN::to_dec(void) const
     return res;
 }
 
-/**
- * @fn      std::string _openssl_BN::_bn2dec(const _openssl_BN& bn) const
- * @brief   convert an openssl big num into a decimal string
- * 
- */
-std::string
-BN::bn_to_dec(const BN& bn) const
+std::string BN::bn_to_dec(const BN& bn) const
 {
     std::string res = "";
     char*       dec = 0;
@@ -342,8 +333,7 @@ std::vector<uint8_t> BN::to_bytes() {
  * @brief   count the big num size in bits
  * 
  */
-int
-BN::bit_size(void) const
+int BN::bit_size(void) const
 {
     return BN_num_bits(this->_ptr);
 }
@@ -471,8 +461,7 @@ BN::inv(const BN& p) const
  * @brief   this = 1/this mod p
  * 
  */
-void 
-BN::inv_inplace(const BN& p) 
+void BN::inv_inplace(const BN& p) 
 {
     ///< this = 1/this mod p
     BN_mod_inverse(this->_ptr, this->_ptr, p._ptr, _ctx);
@@ -485,8 +474,7 @@ BN::inv_inplace(const BN& p)
  * @brief   return this ^ x mod p
  * 
  */    
-BN 
-BN::exp(const BN& x, const BN& p) const
+BN BN::exp(const BN& x, const BN& p) const
 {
     BN res;
 
@@ -551,8 +539,7 @@ BN::negate_inplace(const BN& p)
  * @brief   The Miller-Rabin primality test
  * 
  */
-bool 
-BN::is_prime(void) const
+bool BN::is_prime(void) const
 {
     ///< run the Miller-Rabin probabilistic primality test
     ///< the iteration number is 64 by default
@@ -569,8 +556,7 @@ BN::is_prime(void) const
  * @brief   check if this == 1
  * 
  */
-bool
-BN::is_one(void) const 
+bool BN::is_one(void) const 
 { 
     if (BN_is_one(_ptr)) {
         return true;
@@ -584,8 +570,7 @@ BN::is_one(void) const
  * @brief   check if this == 0
  * 
  */
-bool
-BN::is_zero(void) const 
+bool BN::is_zero(void) const 
 { 
     if (BN_is_zero(_ptr)) {
         return true;
@@ -600,8 +585,7 @@ BN::is_zero(void) const
  * @brief   == operator
  * 
  */
-bool 
-BN::operator==(const BN& rhs)
+bool BN::operator==(const BN& rhs)
 {
     ///< check if this == rhs
     if (0 != BN_cmp(this->_ptr, rhs._ptr)) {

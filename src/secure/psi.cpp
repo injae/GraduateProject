@@ -12,7 +12,7 @@ namespace psi {
         do {
             g.random_inplace(p); // random value in Zp
             if (g.is_zero() or g.is_one()) continue;
-            if((not g.mul(g, p).is_one()) && g.exp(q,p).is_one() && g.exp(p.sub(BN::one(), p), p).is_one()) break;
+            if((not g.mul(g, p).is_one()) && g.exp(q,p).is_one() && g.exp(p.sub(BN::one()), p).is_one()) break;
         } while(true);
         return g;
     }
@@ -20,7 +20,7 @@ namespace psi {
     PublicKeys setup(int bits) {
         PublicKeys keys;
         keys.p.random_safe_prime_inplace(bits);
-        keys.q = keys.p.sub(BN::one(),keys.p).rshift_one();
+        keys.q = keys.p.sub(BN::one()).rshift_one();
         keys.g0 = psi::find_generator(keys.p,keys.q);
         keys.g1 = psi::find_generator(keys.p,keys.q);
         keys.g2 = psi::find_generator(keys.p,keys.q);
@@ -29,32 +29,40 @@ namespace psi {
     }
     
 
-    std::tuple<BN,BN,BN> equal_prover(BN& p, BN& g0, BN& g1, BN& q, BN& x, BN& y0, BN& y1) {
+    EqualValue equal_prover(BN& p, BN& g0, BN& g1, BN& q, BN& x, BN& y0, BN& y1) {
         BN b0, b1, z;
         auto r = PublicKeys::r(q);
         b0 = g0.exp(r, p);
         b1 = g1.exp(r, p);
         auto e = H({p, y0, y1 , b0, b1});
-        z = r.sub(e.mul(x, q), q);
+        z = r.sub(e.mul(x, q));
         return {b0, b1, z};
     }
 
+    bool equal_verifier(EqualValue& pi, BN& p, BN& g0, BN& g1, BN& q, BN y0, BN y1){
+        auto& [b0, b1, z] = pi;
+        auto e = H({p, y0, y1, b0, b1});
+        auto v0 = g0.exp(z).mul(y0.exp(e), p);
+        auto v1 = g1.exp(z).mul(y1.exp(e), p);
+        return b0 == v0 and b1 == v1;
+    }
+
     /// return pi2 = (b, z0, z1)
-    ProofValue two_prover(BN& p, BN& g0, BN& g1, BN& q, BN& x0, BN x1, BN& y) { // namespace psi
+    ProofValue two_prover(BN& p, BN& g0, BN& g1, BN& q, BN& x0, BN x1, BN& y) { 
         ProofValue pi;
         auto r0 = PublicKeys::r(q);
         auto r1 = PublicKeys::r(q);
-        pi.b = g0.exp(r0, p).mul(g1.exp(r1, p), p);
+        pi.b = g0.exp(r0).mul(g1.exp(r1), p);
         auto e = H({p, y, pi.b});
-        pi.z0 = r0.sub(e.mul(x0, q), p);
-        pi.z1 = r1.sub(e.mul(x1, q), p);
+        pi.z0 = r0.sub(e.mul(x0, q));
+        pi.z1 = r1.sub(e.mul(x1, q));
         return pi;
     }
 
     bool two_verifier(ProofValue& pi, BN& p, BN& g0, BN& g1, BN& q, BN& y) {
         auto& [b, z0, z1] = pi;
         auto e = H({ p, y, b });
-        auto v =  g0.exp(z0, p).mul(g1.exp(z1, p), p).mul(y.exp(e, p), p);
+        auto v =  g0.exp(z0).mul(g1.exp(z1).mul(y.exp(e)), p);
         return b == v;
     }
 
