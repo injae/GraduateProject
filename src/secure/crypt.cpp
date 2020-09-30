@@ -625,3 +625,11 @@ BN BN::gcd(const BN& x) const
 
     return res;
 }
+
+
+BN BN::div(const BN& x) const {
+    BN div;
+    BN rem;
+    BN_div(div._ptr, rem._ptr, this->_ptr, x._ptr, _ctx);
+    return div;
+}             

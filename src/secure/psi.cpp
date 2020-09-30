@@ -30,20 +30,19 @@ namespace psi {
     
 
     EqualValue equal_prover(BN& p, BN& g0, BN& g1, BN& q, BN& x, BN& y0, BN& y1) {
-        BN b0, b1, z;
         auto r = PublicKeys::r(q);
-        b0 = g0.exp(r, p);
-        b1 = g1.exp(r, p);
+        auto b0 = g0.exp(r, p);
+        auto b1 = g1.exp(r, p);
         auto e = H({p, y0, y1 , b0, b1});
-        z = r.sub(e.mul(x, q));
+        auto z = r.sub(e.mul(x, q),q);
         return {b0, b1, z};
     }
 
-    bool equal_verifier(EqualValue& pi, BN& p, BN& g0, BN& g1, BN& q, BN y0, BN y1){
+    bool equal_verifier(EqualValue& pi, BN& p, BN& g0, BN& g1, BN& q, BN& y0, BN& y1){
         auto& [b0, b1, z] = pi;
         auto e = H({p, y0, y1, b0, b1});
-        auto v0 = g0.exp(z).mul(y0.exp(e), p);
-        auto v1 = g1.exp(z).mul(y1.exp(e), p);
+        auto v0 = g0.exp(z,p).mul(y0.exp(e,p), p);
+        auto v1 = g1.exp(z,p).mul(y1.exp(e,p), p);
         return b0 == v0 and b1 == v1;
     }
 
@@ -52,27 +51,27 @@ namespace psi {
         ProofValue pi;
         auto r0 = PublicKeys::r(q);
         auto r1 = PublicKeys::r(q);
-        pi.b = g0.exp(r0).mul(g1.exp(r1), p);
+        pi.b = g0.exp(r0,p).mul(g1.exp(r1,p), p);
         auto e = H({p, y, pi.b});
-        pi.z0 = r0.sub(e.mul(x0, q));
-        pi.z1 = r1.sub(e.mul(x1, q));
+        pi.z0 = r0.sub(e.mul(x0, q),q);
+        pi.z1 = r1.sub(e.mul(x1, q),q);
         return pi;
     }
 
     bool two_verifier(ProofValue& pi, BN& p, BN& g0, BN& g1, BN& q, BN& y) {
         auto& [b, z0, z1] = pi;
         auto e = H({ p, y, b });
-        auto v =  g0.exp(z0).mul(g1.exp(z1).mul(y.exp(e)), p);
+        auto v =  g0.exp(z0,p).mul(g1.exp(z1,p).mul(y.exp(e,p),p), p);
         return b == v;
     }
 
     BN H(std::vector<BN>&& bns) {
         using namespace ranges;
-        return hash::Sha256()
-            .hash_to_BN(bns
-                        | views::transform([](auto it) { return it.to_bytes(); })
-                        | views::cache1
-                        | views::join
-                        | to_vector);
+        using namespace hash;
+        return sha256::hash_to_BN(bns
+                       | views::transform([](auto it) { return it.to_bytes(); })
+                       | views::cache1
+                       | views::join
+                       | to_vector);
     }
 }

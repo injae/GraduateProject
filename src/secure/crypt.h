@@ -16,6 +16,8 @@
 #include <openssl/bn.h>
 #include <openssl/rand.h>
 
+#include <fmt/format.h>
+
 /**
  * @class   _openssl_BN
  * @brief   a wrapper class that gives an interface to the openssl::Big number functions
@@ -65,6 +67,7 @@ public:
     void sub_inplace(const BN& x, const BN& p=NULL);         ///< this = this - x mod p
     BN mul(const BN& x, const BN& p=NULL) const;             ///< return this * x mod p
     void mul_inplace(const BN& x, const BN& p=NULL);         ///< this = this * x mod p
+    BN div(const BN& x) const;             ///< return this * x mod p
     BN inv(const BN& p=NULL) const;                          ///< return this^{-1} mod p
     void inv_inplace(const BN& p=NULL);                      ///< this = this^{-1} mod p
     BN exp(const BN& x, const BN& p=NULL) const;             ///< return this ^ x mod p
@@ -108,4 +111,12 @@ private:
     // BIGNUM* _p;         ///< the modulus prime p
 protected:
 };
+
+template<>
+struct fmt::formatter<BN> : fmt::formatter<std::string>
+{
+  template<typename FormatContext>
+  auto format(BN const& bn, FormatContext& ctx){ return fmt::formatter<std::string>::format(bn.to_hex(), ctx); }
+};
+
 #endif 
