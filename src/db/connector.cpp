@@ -8,8 +8,17 @@ namespace db {
         return "select Value from {} where Frequency >= 20 and Amount between 10.3 and 209"_format(table);
     }
 
+    const std::string search_visitor_query(const std::string& table) {
+        return "select Value from {}"_format(table);
+    }
+
+    const std::string insert_nation_query(const PrivateSet& data, const std::string& table) {
+        return "insert into {} VALUES ({}, {}, {})"_format(table, data.value, data.frequency, data.amount);
+    }
+
     std::vector<PrivateSet> query_to_vec(mariadb::result_set_ref result) {
         std::vector<PrivateSet> list;
+        fmt::print("size:{}\n",result->row_count());
         while(result->next()) {
             auto value = result->get_string("Value");
             auto frequency = result->get_unsigned32("Frequency");
@@ -43,5 +52,24 @@ namespace db {
         return *this;
     }
 
+    std::vector<std::string> Connector::visitor() {
+        std::vector<std::string> list;
+        auto result = con()->query(db::search_visitor_query(table_name_));
+        while(result->next()) {
+            auto value = result->get_string("Value");
+            list.emplace_back(value);
+        }
+        return list;
+    }
+
+    std::vector<std::string> Connector::infectors() {
+        std::vector<std::string> list;
+        auto result = con()->query(db::search_infector_query(table_name_));
+        while(result->next()) {
+            auto value = result->get_string("Value");
+            list.emplace_back(value);
+        }
+        return list;
+    }
 
 }

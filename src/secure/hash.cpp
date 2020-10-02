@@ -1,6 +1,6 @@
 #include "secure/hash.hpp"
 
-namespace hash::sha256 {
+namespace ssl::sha256 {
         std::string hash_to_str(const std::string& data) {
             std::string result(SHA256_DIGEST_LENGTH*2, ' ');
             uint8_t digest[SHA256_DIGEST_LENGTH];
@@ -22,8 +22,8 @@ namespace hash::sha256 {
             return digest;
         }
 
-        BN hash_to_BN(const std::vector<uint8_t>& data) {
-            BN bn;
+        Bn hash_to_Bn(const std::vector<uint8_t>& data) {
+            Bn bn;
             uint8_t digest[SHA256_DIGEST_LENGTH];
             SHA256_CTX ctx_;
             SHA256_Init(&ctx_);
@@ -33,8 +33,8 @@ namespace hash::sha256 {
             return bn;
         }
 
-        BN hash_to_BN(const std::string& data) {
-            BN bn;
+        Bn hash_to_Bn(const std::string& data) {
+            Bn bn;
             uint8_t digest[SHA256_DIGEST_LENGTH];
             SHA256_CTX ctx_;
             SHA256_Init(&ctx_);

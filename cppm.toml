@@ -1,23 +1,29 @@
 [package]
-   name = "jogyu"
-   version = "0.0.1"
-   description = ""
+    name = "gp2020fall"
+    version = "0.0.1"
+    description = "gp2020fall project made by injae"
+[cmake]
+    include = ["cmake/OpenSSLEnv.cmake"]
+
+[lib]
+    name = "gp2020fall"
+    source = ["src/db/.*", "src/secure/.*"]
 
 [[bin]]
-   name = "client"
-   source = ["src/client/.*", "src/db/.*", "src/secure/.*"]
+    name = "client"
+    source = ["src/client.cpp"]
 
 [[bin]]
-   name = "server"
-   source = ["src/server/.*", "src/db/.*", "src/secure/.*"]
+    name = "server"
+    source = ["src/server.cpp"]
 
 #[[test]]
 #    name   = "crypt-test"
 #    source = ["tests/test.cc", "src/secure/.*"]
 #
-[[test]]
-    name   = "logic_test"
-    source = ["tests/logic_test.cpp", "src/secure/.*"]
+#[[test]]
+#    name   = "logic_test"
+#    source = ["tests/logic_test.cpp", "src/secure/.*"]
 
 [dependencies]
     fmt="7.0.3"

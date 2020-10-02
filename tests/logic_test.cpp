@@ -8,7 +8,7 @@
 
 int main(int argc, char* argv[]) {
     using namespace ranges;
-    using namespace hash;
+    using namespace ssl;
 
     //safe prime check
     //{
@@ -20,13 +20,14 @@ int main(int argc, char* argv[]) {
     //    fmt::print("2q ,  data:{}\n",q.lshift_one().to_dec());
     //    fmt::print("2q+1 ,  data:{}\n",q.lshift_one().add(BN::one(), NULL).to_dec());
     //}
+    
     std::vector<std::string> X = {"hello1", "hello2", "hello3"};
 
     // c-1
     auto keys = psi::setup(1024);
-    auto HX = X  | views::transform([](auto it) { return sha256::hash_to_BN(it); }) | to_vector;
+    auto HX = X  | views::transform([](auto it) { return sha256::hash_to_Bn(it); }) | to_vector;
     auto An = HX | views::transform([&keys](auto it) { return keys.H1(it); });
-    auto A = accumulate(An, BN::one(), [&keys](auto it, auto acc) {return it.mul(acc, keys.p);});
+    auto A = accumulate(An, Bn::one(), [&keys](auto it, auto acc) {return it.mul(acc, keys.p);});
 
     // c-2
     auto r = keys.r();
@@ -77,11 +78,11 @@ int main(int argc, char* argv[]) {
     auto pi_s = psi::equal_prover(keys.p, keys.g1, a1, keys.q, rr, S, bn[0]); // pieq == pis
 
     std::vector<std::string> Y = {"hello1", "hello3", "hello4", "hello5"};
-    assert(sha256::hash_to_BN(Y[0]) == sha256::hash_to_BN(X[0]));
+    assert(sha256::hash_to_Bn(Y[0]) == sha256::hash_to_Bn(X[0]));
 
     // s-9~11
     auto Um = Y | views::transform([&](auto it) {
-        auto yj = sha256::hash_to_BN(it);
+        auto yj = sha256::hash_to_Bn(it);
         auto Sj = keys.H1(yj);
         auto kj = Sj.exp(rr, keys.p);
         return psi::H({kj, Sj, yj});
