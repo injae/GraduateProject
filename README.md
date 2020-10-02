@@ -43,6 +43,7 @@ infecotrs: {"1", "4"}
 ```
 ### client
 ```console
+❯ ./client
 gp2020fall: connected
 infecters[2]:{"1", "4"}
 finish
