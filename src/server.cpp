@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
         db::migrate(database);
         Y = database.infectors();
     } 
-    fmt::print("infecotrs: {}\n",Y);
+    fmt::print("infecters: {}\n",Y);
 
     zmqpp::context context;
     zmqpp::socket socket (context, zmqpp::socket_type::rep);

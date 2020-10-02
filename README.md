@@ -10,6 +10,12 @@ openssl은 기술적인 이유에 의하여 ANSI C로 구현되어 있으나, �
     - cmake는 `.dmg` 형태의 바이너리로 설치하는데, 설치에 관하여 상세하게 설명된 여러 사이트가 있으며 macOS에 설치하는 방법은 [여기](https://tudat.tudelft.nl/installation/setupDevMacOs.html) 정도가 추천할만 하다.
 * Github의 `pull & push`등의 기본 Command도 안다고 가정한다. 필요하면 [간략히 설명한 사이트](https://medium.com/@pks2974/자주-사용하는-기초-git-명령어-정리하기-533b3689db81)를 방문하여 기억을 되살리고 시작해도 늦지 않다.
 * [google tests](https://github.com/google/googletest)를 이용하면 좀 더 편리할 수 있으나, 향후 요청이 있는 경우 추가한다
+* mariadb와 openssl부분은 brew를 사용하여 자동으로 설치되기때문에 현재 macos에서만 dependency를 자동으로 관리된다. 향후 멀티플랫폼 빌드 요청이 있는경우 추가한다.
+* 대부분의 구현은 pdf에 있는 내용과 거의 일치하는 이름으로 구현되었다.
+* networking과 protocol은 ZeroMQ와 json을 이용하여 구현하였다.
+* 데이터베이스 테스트값은 실행하였을때 테이블이 비어있다면 자동으로 추가된다.
+* 별도의 dependency들은 cmake를 이용하여 자동으로 설치되기때문에 cmake와 c++ compiler만 있으면 작동된다.
+* socket통신은 기본적으로 ssl로 감싸지 않았기때문에 향후 요청이 있는 경우 추가한다.
 
 ## System 환경
 - 운영체제: Apple  macOS Catalina 버전 10.15.2
@@ -18,8 +24,30 @@ openssl은 기술적인 이유에 의하여 ANSI C로 구현되어 있으나, �
 - Programming 언어: clang++ version=11.0.0
 
 ## 사용법
-1. mariadb install
-   - `brew install mariadb`
+```console
+# 클린하게 관리할수있는 cmake debug build 과정 release build를 하려면 Debug 부분을 Release로 변경하면 된다.
+mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && cmake --build . --config Debug 
+cd Debug
+
+# 별도의 터미널에서
+./server
+# 별도의 터미널에서
+./client
+```
+## 실행결과
+### server
+```console
+❯ ./server
+gp2020fall: connected
+infecotrs: {"1", "4"}
+```
+### client
+```console
+gp2020fall: connected
+infecters[2]:{"1", "4"}
+finish
+```
+
 
 <!---
 <span style="font-family: Courier;">brew install openssl</span>

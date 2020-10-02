@@ -3,7 +3,7 @@
 #ifndef __SECURE_PSI_HPP__
 #define __SECURE_PSI_HPP__
 
-#include "secure/crypt.h"
+#include "secure/bn.hpp"
 #include <tuple>
 #include <nlohmann/json.hpp>
 

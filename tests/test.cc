@@ -11,16 +11,17 @@
 #include <cstdio>
 #include <fmt/format.h>
 
-#include "secure/crypt.h"
+#include "secure/bn.hpp"
 #include "secure/psi.hpp"
 
 int main(int argc, char** argv)
 {
+    using namespace ssl;
     using std::cout;
     using std::endl;
 
     uint8_t     bytes[1000] = {0};
-    BN a, b(100), c = 1;
+    Bn a, b(100), c = 1;
     int         len = 0, lambda = 2048, count = 0;
 
     ///< random test
@@ -37,12 +38,12 @@ int main(int argc, char** argv)
 
     ///< assignment
     std::cout << "2. ## Assignment ##" << std::endl;
-    BN d = a;
+    Bn d = a;
     std::cout << "number in hex: [" << d.to_hex() << "]" << std::endl << std::endl;
 
     ///< generate a prime of lenght lambda
     std::cout << "3. ## Prime generation ##" << std::endl;
-    BN p;
+    Bn p;
     p.random_inplace(lambda);
     while (true) {
         count += 1;
@@ -53,7 +54,7 @@ int main(int argc, char** argv)
     cout << "A prime number: [" << p.to_hex() << "]" << endl;
 
     ///< arithmetic
-    BN r, s, t, u, v, w;
+    Bn r, s, t, u, v, w;
     std::cout << "4. ## Addition and Subtraction ##" << std::endl;
     r.random_inplace(lambda);
     cout << "a =         [" << r.to_hex() << "]" << endl;
@@ -61,7 +62,7 @@ int main(int argc, char** argv)
     cout << "c = a + 1 = [" << s.to_hex() << "]" << endl;
 
     std::cout << "5. ## Multiplication and Division (= Inverse) ##" << std::endl;
-    BN one(1);
+    Bn one(1);
     t = s.gcd(p);                                          ///< t = gcd(s, p)
     while (true != t.is_one()) {
         s.add(one, p);                                     ///< s++
@@ -74,7 +75,7 @@ int main(int argc, char** argv)
     v.mul_inplace(s, p);
     cout << "s * 1/s = [" << v.to_hex() << "]" << endl;
     std::cout << "6. ## Exponentiation ##" << std::endl;
-    BN p_minus_1 = p.sub(one, p);
+    Bn p_minus_1 = p.sub(one, p);
 
     w = v.exp(p_minus_1, p);
     cout << "s^{p-1} = [" << w.to_hex() << "]" << endl;    ///< recall Fermat's little theorem

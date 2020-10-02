@@ -17,6 +17,7 @@ namespace db {
             {"5", 24, 210 },
     };
 
+    /// if you don't want default dataset change dataset argument
     inline void migrate(Connector& db, const std::vector<PrivateSet>& dataset = TEST_DATASET) {
         using namespace ranges;
         for_each(dataset, [&](auto it){

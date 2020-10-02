@@ -4,121 +4,25 @@
 . 간단한 코딩 규칙
 . 필요하다고 생각하는 규칙은 추가하신 후 알려주면 코딩에 반영할게요.
 -->
+1. class는 CamlCase를 활용한다.
+2. function들은 snace_case를 사용하여 작성한다.
+3. member variable은 변수명뒤에 _를 붙여서 사용한다. 
+4. namespace는 snake_case를 사용하여 작성한다.
+5. 모든 멤버가 public인 class는 struct로 구현한다.
+6. 기본적으로 모든 헤더는 namespace를 사용하여 감싼다. 
+7. 최대한 함수이름은 그함수의 용도를 담고있는 이름(pdf이름 우선, 길이가 길어도 상관없다.)으로 작성하여 별도의 주석이 없는경우에도 사용할수 있게 작성하는것을 원칙으로한다.
+8. 만약 함수이름만으로 설명이 어려운경우 부가적인 주석을 작성한다.
+9. public header는 include폴더안에 작성을하며, private header는 .cpp 파일과 함께 작성한다.
 
-### Class
-1. Class 이름은 **ClassName**
-    >~~~cpp
-    > class ClassName
-    > {
-    >   ...
-    > };
-    >~~~
-2. class의 member function과 변수들
-    * Variables:
-        - public: **public_name**,
-        - protected: **protected_name_**,
-        - private: **private_name_**
-        >~~~cpp
-        > template <class T>
-        > class ClassName
-        > {
-        > ///
-        > public:
-        >     function declarations;
-        > ///
-        > public:
-        >     int32_t a;       /// public
-        >     std::string b_;   /// protected
-        >     T c_;            /// private
-        > };
-    * Functions: 위와 같이하고 가능하면 **동사** 소문자로 시작합니다.
-        - public: **do_something(...)**
-        - function의 구현은 다음 정도의 모양을 유지하도록 사용했습니다.
-        > ~~~cpp
-        > return_type
-        > ClassName::do_something(arguments_list)
-        >{
-        >   uint32_t a = 0;
-        >   uint8_t* b = nullptr;
-        >   return_type res;
-        >  
-        >   ...
-        >   return res;
-        >}
-        > ~~~
-        - 함수 내부는 적당히 단락을 구분지어 주면서
-
-## Some <span style="font-family:courier">Keywords</span>
-1. **c++11** 이후 버전에서 지원하는 keyword 쓰면 됩니다.
-2. **if**
-    >~~~cpp
-    > if (a == b) {}
-    >     statement;
-    > }
-    >~~~
-
-3. **for** and **while**
-    >~~~cpp
-    > for (uint32_t i = start; i < end; i++) {
-    >     statement;
-    > }
-    >~~~
-    이나
-    >~~~cpp
-    > uint32_t i = 0;
-    > while (i < Bnd) {
-    >     statement;
-    > }
-    >~~~
-    또는
-    >~~~cpp
-    > #inclide <algorithm>
-    > ...
-    > {
-    >     ...
-    >     for_each (begin, end, obj);
-    >     ...
-    > }
-    >~~~
-    를 써도 되고
-    >~~~cpp
-    > {
-    >     ...
-    >     for_each (begin, end, doSomething);
-    >     ...
-    > }
-    >~~~
-4. intrinsic type외에 `typedef`하기 전에 `#include <cstdint>`를 먼저 살펴보고 있으면 여기 미리 정의되어 있는 type들을 사용하길 권합니다.
-
-
-## Comments
-1. **Doxygen**을 따를 정도면 충분해 보여서; 최대한 정성껏 주석을 추가했습니다 :wink:
-2. class는
-    > ~~~cpp
-    > /**
-    >  * @class _ClassName
-    >  * @brief 적당한 설명 (너무 형편없지만 않으면, 없는것 보다는 나은 듯 :-)
-    >  *
-    >  */
-    >~~~
-
-3. function은
-    > ~~~cpp
-    > /**
-    >  * @fn    _doSomething(...)
-    >  * @brief 적당한 설명
-    >  * @param arg1
-    >  *
-    >  */
-    >~~~
-4. `#define`과 특별한 variable들은 용도 설명만 간단히 설명했습니다.
-    >~~~cpp
-    > /// @def    SOME_LITERAL
-    > /// @brief  what for?
-    > #define SOME_LITERAL    1000
-    >
-    > /// @var    _cPi
-    > /// @brief  what for?
-    > static const uint32_t   _cPi  =  3.141592;
-    >~~~
-5. 자잘한 것은 알아서 debugging만 편하면 적당히 알아서 하시면...:shipit:
+```cpp
+namespace test {
+    class ClassName {
+    public:
+        /// 
+        void test_function(int a, int b_b) {
+        }
+    private:
+        std::string test_;
+    };
+}
+```

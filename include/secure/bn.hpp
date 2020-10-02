@@ -1,14 +1,5 @@
-/* ************************************************************************************************************************************ *\
- * @file    crypt.h
- * @brief   a sample code for you who are working with C++
- * @author  Myungsun Kim
- * @note    I follow the comment style of doxygen
- *          So for the further information see https://www.doxygen.nl/index.html
- * 
-\* ************************************************************************************************************************************ */
-
-#ifndef __SECURE_CRYPT_H__
-#define __SECURE_CRYPT_H__
+#ifndef __SECURE_BN_HPP__
+#define __SECURE_BN_HPP__
 
 #include <string>
 #include <cstdint>
@@ -19,14 +10,6 @@
 #include <fmt/format.h>
 #include <nlohmann/json.hpp>
 
-/**
- * @class   BN
- * @brief   a wrapper class that gives an interface to the openssl::Big number functions
- * 
- *          In this class, the modulus p is explicitly given for intructive purpose
- *          If more reality is persued, the modulus p had better be embedded into the class
- *          Therefore, if possible I hope that you freely modify this class at your disposal
- */
 namespace ssl {
     class Bn
     {
@@ -39,8 +22,8 @@ namespace ssl {
         Bn(const u_int8_t* bytes, const size_t len);
         virtual ~Bn(void);
 
-        static Bn one(void) {return Bn(1);}           ///< singleton
-        static Bn zero(void) {return Bn(0);}          ///< singleton
+        static Bn one(void) {return Bn(1);}   
+        static Bn zero(void) {return Bn(0);}  
         bool is_one(void) const; 
         bool is_zero(void) const;    
 
@@ -58,8 +41,8 @@ namespace ssl {
         Bn lshift_one();
 
         ///< arithmetic operations
-        Bn mod(const Bn& p) const;
-        void mod_inplace(const Bn& p);
+        Bn mod(const Bn& p) const;                               ///< return this mod p
+        void mod_inplace(const Bn& p);                           ///< this = this mod p
         Bn negate(const Bn& p=NULL) const;                       ///< return -this mod p
         void negate_inplace(const Bn& p=NULL);                   ///< this = -this mod p
         Bn add(const Bn& x, const Bn& p=NULL) const;             ///< return this + x mod p
@@ -94,22 +77,16 @@ namespace ssl {
         void from_bytes(const uint8_t* bytes, const int len);
 
         ///< output
-        std::string bn_to_dec(const Bn& bn) const;
-        std::string bn_to_hex(const Bn& bn) const;    
+        static std::string bn_to_dec(const Bn& bn);
+        static std::string bn_to_hex(const Bn& bn);    
         std::string to_dec(void) const;
         std::string to_hex(void) const;
         void to_bytes(uint8_t* bytes, int* len) const;
         std::vector<uint8_t> to_bytes();
 
-    protected:
     private:
-        // void setModulus__(void);
-
-    ///<
-    private:
-        BN_CTX* _ctx;       ///< context
-        BIGNUM* _ptr;       ///< pointer to the big number 
-        // BIGNUM* _p;         ///< the modulus prime p
+        BN_CTX* ctx_;       ///< context
+        BIGNUM* ptr_;       ///< pointer to the big number 
     protected:
     };
 }

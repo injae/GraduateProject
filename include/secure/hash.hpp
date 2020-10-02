@@ -7,7 +7,7 @@
 #include <array>
 #include <string>
 #include <vector>
-#include "secure/crypt.h"
+#include "secure/bn.hpp"
 
 namespace ssl::sha256{
     std::string hash_to_str(const std::string& data);

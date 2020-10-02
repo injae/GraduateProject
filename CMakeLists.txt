@@ -21,9 +21,9 @@ find_cppkg(zmqpp git  MODULE zmqpp::zmq TYPE lib)
 cppm_target_define(gp2020fall STATIC
 SOURCES
     src/db/connector.cpp
-    src/secure/crypt.cpp
     src/secure/psi.cpp
     src/secure/hash.cpp
+    src/secure/bn.cpp
 )
 
 cppm_target_define(client BINARY
@@ -36,6 +36,22 @@ SOURCES
     src/server.cpp
 )
 
+cppm_unit_test_area()
+if(GP2020FALL_BUILD_TESTING)
+
+cppm_target_define(crypt-test BINARY
+SOURCES
+    tests/test.cc
+)
+
+cppm_target_define(logic_test BINARY
+SOURCES
+    tests/logic_test.cpp
+)
+
+endif()
+end_cppm_unit_test_area()
+
 
 set(global_deps PUBLIC OpenSSL fmt mariadbclientpp nlohmann_json range-v3 zmqpp)
 cppm_target_dependencies(gp2020fall
@@ -46,6 +62,14 @@ cppm_target_dependencies(client
    gp2020fall)
 
 cppm_target_dependencies(server
+   ${global_deps}
+   gp2020fall)
+
+cppm_target_dependencies(crypt-test
+   ${global_deps}
+   gp2020fall)
+
+cppm_target_dependencies(logic_test
    ${global_deps}
    gp2020fall)
 

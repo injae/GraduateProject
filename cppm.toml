@@ -1,7 +1,7 @@
 [package]
     name = "gp2020fall"
     version = "0.0.1"
-    description = "gp2020fall project made by injae"
+    description = "gp2020fall sample project made by injae"
 [cmake]
     include = ["cmake/OpenSSLEnv.cmake"]
 
@@ -17,13 +17,13 @@
     name = "server"
     source = ["src/server.cpp"]
 
-#[[test]]
-#    name   = "crypt-test"
-#    source = ["tests/test.cc", "src/secure/.*"]
-#
-#[[test]]
-#    name   = "logic_test"
-#    source = ["tests/logic_test.cpp", "src/secure/.*"]
+[[test]]
+    name   = "crypt-test"
+    source = ["tests/test.cc"]
+
+[[test]]
+    name   = "logic_test"
+    source = ["tests/logic_test.cpp"]
 
 [dependencies]
     fmt="7.0.3"
