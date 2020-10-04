@@ -13,6 +13,9 @@
 #include "db/migrate.hpp"
 #include "network/util.hpp"
 #include "secure/psi.hpp"
+#include "utility/parallel.hpp"
+
+#include <future>
 
 using namespace nlohmann;
 using namespace ranges;
@@ -22,12 +25,13 @@ using namespace net::server;
 int main(int argc, char* argv[]) {
     auto database = db::Connector("_PrivateSetY").setup();
 
+    //database.drop_table();
     auto Y = database.infectors();
+    fmt::print("infectors:{}\n",Y.size());
     if(Y.empty()) {
         db::migrate(database);
         Y = database.infectors();
     } 
-    fmt::print("infecters: {}\n",Y);
 
     zmqpp::context context;
     zmqpp::socket socket (context, zmqpp::socket_type::rep);
@@ -42,36 +46,39 @@ int main(int argc, char* argv[]) {
         ProofValue pi_c = receive_data(socket);
 
     // s-3
-    auto y = B.mul(an[0].mul(on[0], keys.p).inv(keys.p), keys.p);
-    auto h = keys.g1.mul(keys.g2, keys.p);
-    assert(psi::two_verifier(pi_c, keys.p, keys.g0, h, keys.q, y));
+        auto y = B.mul(an[0].mul(on[0], keys.p).inv(keys.p), keys.p);
+        auto h = keys.g1.mul(keys.g2, keys.p);
+        assert(psi::two_verifier(pi_c, keys.p, keys.g0, h, keys.q, y));
 
-    // s-5
-    auto rr = keys.r();
-    auto S = keys.g1.exp(rr, keys.p);
+        // s-5
+        auto rr = keys.r();
+        auto S = keys.g1.exp(rr, keys.p);
 
-    // s-7~8
-    auto bn = an | views::transform([&keys, &rr](auto ai) {
-        return ai.exp(rr,keys.p);
-    }) | to_vector;
+        // s-7~8
+        auto bn = an | par::transform(par::csize(an),[&keys, &rr](auto ai) {return ai.exp(rr,keys.p);}) | to_vector;
 
-    // s-6
-    auto pi_s = psi::equal_prover(keys.p, keys.g1, an[0], keys.q, rr, S, bn[0]); // pieq == pis
+        // S-9~11
+        auto Um = Y | par::transform(par::csize(Y), [&](auto it) {
+                auto yj = sha256::hash_to_Bn(it);
+                auto Sj = keys.H1(yj);
+                auto kj = Sj.exp(rr, keys.p);
+                return psi::H({kj, Sj, yj});
+            }) | to_vector;
 
-    // s-9~11
-    auto Um = Y | views::transform([&](auto it) {
-        auto yj = sha256::hash_to_Bn(it);
-        auto Sj = keys.H1(yj);
-        auto kj = Sj.exp(rr, keys.p);
-        return psi::H({kj, Sj, yj});
-    }) | to_vector;
+        // s-6
+        auto a1 = an[0].exp(rr, keys.p);
+        auto pi_s = psi::equal_prover(keys.p, keys.g1, an[0], keys.q, rr, S, a1); // pieq == pis
 
-    //  s-12
-    //  server_to_client(S, bn, Um, pi_s );
-    send_data(S, socket);
-    send_large_data(bn, socket);
-    send_large_data(Um, socket);
-    send_data(pi_s, socket);
+        //  s-12
+        //  server_to_client(S, bn, Um, pi_s );
+        fmt::print("s-12[S]\n");
+        send_data(S, socket);
+        fmt::print("s-12[bn]\n");
+        send_large_data(bn, socket);
+        fmt::print("s-12[Um]\n");
+        send_large_data(Um, socket);
+        fmt::print("s-12[pi_s]\n");
+        send_data(pi_s, socket);
 
     }
 

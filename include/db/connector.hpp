@@ -20,7 +20,7 @@ namespace db {
 
     struct PrivateSet {
         std::string value;
-        uint frequency;
+        u_int32_t frequency;
         float amount;
     };
 
@@ -36,6 +36,7 @@ namespace db {
         inline const std::string table_name() { return table_name_; }
         std::vector<std::string> infectors(); // get Y
         std::vector<std::string> visitor(); // get X
+        void drop_table();
     private:
         mariadb::connection_ref con_;
         mariadb::account_ref acc_;

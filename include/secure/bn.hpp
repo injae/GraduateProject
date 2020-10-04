@@ -13,7 +13,6 @@
 namespace ssl {
     class Bn
     {
-    ///<
     public:
         ///< ctors and dtor
         Bn(void);
@@ -66,6 +65,7 @@ namespace ssl {
 
         bool operator==(const Bn& rhs);
         bool operator!=(const Bn& rhs);
+        bool operator<(const Bn& rhs);
 
         // BN& operator+=(const BN& rhs);
         // BN& operator-=(const BN& rhs);
@@ -87,7 +87,6 @@ namespace ssl {
     private:
         BN_CTX* ctx_;       ///< context
         BIGNUM* ptr_;       ///< pointer to the big number 
-    protected:
     };
 }
 

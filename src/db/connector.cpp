@@ -71,5 +71,9 @@ namespace db {
         }
         return list;
     }
+    
+    void Connector::drop_table() {
+        con_->query("drop table {}"_format(table_name_));
+    }
 
 }

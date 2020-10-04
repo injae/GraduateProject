@@ -326,25 +326,17 @@ namespace ssl {
         }
     }
 
-    bool Bn::operator==(const Bn& rhs)
-    {
-        ///< check if this == rhs
-        if (0 != BN_cmp(this->ptr_, rhs.ptr_)) {
-            return false;
-        }
-        else {
-            return true;
-        }
+    bool Bn::operator==(const Bn &rhs) {
+      ///< check if this == rhs
+      return 0 == BN_cmp(this->ptr_, rhs.ptr_);
     }
 
-    bool Bn::operator!=(const Bn& rhs)
-    {
-        if (*this == rhs) {
-            return false;
-        }
-        else {
-            return true;
-        }
+    bool Bn::operator!=(const Bn& rhs) {
+        return !(*this == rhs);
+    }
+
+    bool Bn::operator<(const Bn& rhs) {
+        return -1 == BN_cmp(this->ptr_, rhs.ptr_);
     }
 
     Bn Bn::gcd(const Bn& x) const {

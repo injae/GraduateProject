@@ -17,6 +17,11 @@
     name = "server"
     source = ["src/server.cpp"]
 
+[[bin]]
+    name = "migrate"
+    source = ["src/db/migrate.cpp"]
+
+
 [[test]]
     name   = "crypt-test"
     source = ["tests/test.cc"]

@@ -49,6 +49,30 @@ infecters[2]:{"1", "4"}
 finish
 ```
 
+# Benchmark
+```console
+# [test dataset insert]
+#========================================
+❯ ./migrate 
+database test data migrate
+gp2020fall: connected
+gp2020fall: connected
+person : infector == 100000 : 12261 (12.261%)
+
+_PrivateSetY migrated size:100000 dataset
+
+_PrivateSetX migrated size:100000 dataset
+#=========================================
+
+./server
+
+# client benchmark to use time command
+time ./client  173.27s user 2.65s system 77% cpu 3:48.33 total
+# parall version client benchmark 
+time ./client  162.91s user 2.04s system 77% cpu 3:31.56 total
+```
+
+
 
 <!---
 <span style="font-family: Courier;">brew install openssl</span>

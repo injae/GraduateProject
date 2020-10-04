@@ -24,7 +24,7 @@ namespace net {
         }
 
         template<typename T>
-        void send_large_data(const std::vector<T>& data, zmqpp::socket& socket) {
+        void send_large_data(const T& data, zmqpp::socket& socket) {
             for_each(data | views::chunk(4),[&](auto chunk) {
                 zmqpp::message msg;
                 json data(chunk | to_vector);
@@ -99,7 +99,7 @@ namespace net {
         }
 
         template<typename T>
-        void send_large_data(const std::vector<T>& data, zmqpp::socket& socket) {
+        void send_large_data(const T& data, zmqpp::socket& socket) {
             for_each(data | views::chunk(4),[&](auto chunk) {
                 zmqpp::message check;
                 zmqpp::message msg;

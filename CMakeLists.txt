@@ -21,6 +21,7 @@ find_cppkg(zmqpp git  MODULE zmqpp::zmq TYPE lib)
 cppm_target_define(gp2020fall STATIC
 SOURCES
     src/db/connector.cpp
+    src/db/migrate.cpp
     src/secure/psi.cpp
     src/secure/hash.cpp
     src/secure/bn.cpp
@@ -34,6 +35,11 @@ SOURCES
 cppm_target_define(server BINARY
 SOURCES
     src/server.cpp
+)
+
+cppm_target_define(migrate BINARY
+SOURCES
+    src/db/migrate.cpp
 )
 
 cppm_unit_test_area()
@@ -65,6 +71,10 @@ cppm_target_dependencies(server
    ${global_deps}
    gp2020fall)
 
+cppm_target_dependencies(migrate
+   ${global_deps}
+   gp2020fall)
+
 cppm_target_dependencies(crypt-test
    ${global_deps}
    gp2020fall)
@@ -77,4 +87,5 @@ cppm_target_dependencies(logic_test
 cppm_target_install(gp2020fall)
 cppm_target_install(client)
 cppm_target_install(server)
+cppm_target_install(migrate)
 
