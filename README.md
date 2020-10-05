@@ -19,8 +19,8 @@ openssl은 기술적인 이유에 의하여 ANSI C로 구현되어 있으나, �
 
 ## System 환경
 - 운영체제: Apple  macOS Catalina 버전 10.15.2
-- CPU: 3.7GHz 6코어 Intel Core i5
-- M/M: 32GB 2667 MHz DDR4
+- CPU: 2.6GHz 6코어 Intel Core i7
+- M/M: 16GB 2667 MHz DDR4
 - Programming 언어: clang++ version=11.0.0
 
 ## 사용법
