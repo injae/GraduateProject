@@ -51,27 +51,25 @@ finish
 
 # Benchmark
 ```console
-# [test dataset insert]
+#[test dataset insert]
 #========================================
 ❯ ./migrate 
 database test data migrate
 gp2020fall: connected
 gp2020fall: connected
-person : infector == 100000 : 12261 (12.261%)
+client : server == 50000 : 100000 
 
-_PrivateSetY migrated size:100000 dataset
+intersection: 30
 
+_PrivateSetY migrated size:50000 dataset
 _PrivateSetX migrated size:100000 dataset
 #=========================================
 
 ./server
 
-# client benchmark to use time command
-time ./client  173.27s user 2.65s system 77% cpu 3:48.33 total
-# parall version client benchmark 
-time ./client  162.91s user 2.04s system 77% cpu 3:31.56 total
+# client benchmark 
+./client  56.99s user 1.85s system 55% cpu 1:45.66 total
 ```
-
 
 
 <!---

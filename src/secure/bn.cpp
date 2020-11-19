@@ -326,16 +326,16 @@ namespace ssl {
         }
     }
 
-    bool Bn::operator==(const Bn &rhs) {
+    bool Bn::operator==(const Bn &rhs) const{
       ///< check if this == rhs
       return 0 == BN_cmp(this->ptr_, rhs.ptr_);
     }
 
-    bool Bn::operator!=(const Bn& rhs) {
+    bool Bn::operator!=(const Bn& rhs) const{
         return !(*this == rhs);
     }
 
-    bool Bn::operator<(const Bn& rhs) {
+    bool Bn::operator<(const Bn& rhs) const{
         return -1 == BN_cmp(this->ptr_, rhs.ptr_);
     }
 

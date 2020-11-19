@@ -10,11 +10,11 @@
 namespace par {
     using namespace ranges;
 
-    auto size(size_t n) { return n / std::thread::hardware_concurrency(); }
+    auto size(size_t n) { return n / (std::thread::hardware_concurrency()); }
     template<class Con>
-    auto csize(Con container) { return container.size() / std::thread::hardware_concurrency(); }
+    auto csize(Con container) { return container.size() / (std::thread::hardware_concurrency()); }
     template<class Range>
-    auto rsize(Range rng) { return distance(rng) / std::thread::hardware_concurrency(); }
+    auto rsize(Range rng) { return distance(rng) / (std::thread::hardware_concurrency()); }
 
     template<class Func>
     auto iter(size_t n, Func&& func) {

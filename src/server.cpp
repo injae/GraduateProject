@@ -25,13 +25,9 @@ using namespace net::server;
 int main(int argc, char* argv[]) {
     auto database = db::Connector("_PrivateSetY").setup();
 
-    //database.drop_table();
-    auto Y = database.infectors();
-    fmt::print("infectors:{}\n",Y.size());
-    if(Y.empty()) {
-        db::migrate(database);
-        Y = database.infectors();
-    } 
+    auto Y = database.visitor();
+    fmt::print("visitor:{}\n",Y.size());
+    if(Y.empty()) { fmt::print(stderr,"database empty\n"); exit(1); } 
 
     zmqpp::context context;
     zmqpp::socket socket (context, zmqpp::socket_type::rep);

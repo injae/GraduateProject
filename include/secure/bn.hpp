@@ -63,9 +63,9 @@ namespace ssl {
         Bn& operator=(const int rhs);                       ///< this <- rhs
         Bn& operator=(const Bn& rhs);     
 
-        bool operator==(const Bn& rhs);
-        bool operator!=(const Bn& rhs);
-        bool operator<(const Bn& rhs);
+        bool operator==(const Bn& rhs) const;
+        bool operator!=(const Bn& rhs) const;
+        bool operator<(const Bn& rhs) const;
 
         // BN& operator+=(const BN& rhs);
         // BN& operator-=(const BN& rhs);

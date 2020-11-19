@@ -1,5 +1,6 @@
 #include <iostream>
 #include <future>
+#include <map>
 
 #include <fmt/format.h>
 #include <range/v3/all.hpp>
@@ -32,8 +33,9 @@ int main(int argc, char* argv[]) {
     auto X = database.visitor();
     fmt::print("visitors:{}\n",X.size());
     if(X.empty()) {
-        db::migrate(database);
-        X = database.visitor();
+        //db::migrate(database);
+        //X = database.visitor();
+        fmt::print(stderr,"database empty\n"); exit(1);
     }
 
     // c-1
@@ -49,7 +51,7 @@ int main(int argc, char* argv[]) {
     auto B = A.mul(keys.g0.exp(r,keys.p), keys.p);
 
     // c-3~5
-    fmt::print("c-3[chunk:{}]\n",distance(An)/std::thread::hardware_concurrency());
+    fmt::print("c-3[chunk:{}]\n",distance(An)/(std::thread::hardware_concurrency()*2));
     auto aon = An | par::transform(par::rsize(An), [&](auto Ai) {
             auto Bi = A.mul(Ai.inv(keys.p),keys.p);
             auto ri  = keys.r();
@@ -76,8 +78,8 @@ int main(int argc, char* argv[]) {
     auto an = aon | views::transform([&](auto it){return get<0>(it); });
     auto on = aon | views::transform([&](auto it){return get<1>(it); });
     auto rn = aon | views::transform([&](auto it){return get<2>(it); });
-    // c-7 send server keys B, an, on, pi2
 
+    // c-7 send server keys B, an, on, pi2
     fmt::print("c-7[key]\n");
     send_data(keys, socket);
     fmt::print("c-7[B]\n");
@@ -102,26 +104,42 @@ int main(int argc, char* argv[]) {
     fmt::print("c-9\n");
     assert(psi::equal_verifier(pi_s, keys.p, keys.g1, a1, keys.q ,S ,bn[0]));
 
-    // c-11~12
+
     fmt::print("c-11\n");
+    std::map<Bn, int> Cn_map;
     auto Cn = views::zip(bn, An, HX, rn) | par::transform(par::csize(bn),[&](auto it){
         auto& [bi, Ai, xi, ri]= it;
         auto ki = bi.mul(S.exp(ri,keys.p).inv(keys.p), keys.p);
         return psi::H({ki, Ai, xi});
     }) | to_vector;
 
-    // c-13~14
-    
     fmt::print("c-13\n");
     std::vector<int> I;
-    for(auto&& [i, ci] :  Cn | views::enumerate) {
-        for(auto& uj : Um) {
-            if(ci == uj) { I.emplace_back(i);}
-        }
+    for (auto&& [i, ci] : Cn | views::enumerate) { Cn_map.insert({ci, i}); }
+    for(auto& uj: Um) {
+        if(auto search = Cn_map.find(uj); search != Cn_map.end()) I.emplace_back(search->second);
     }
 
-    //fmt::print("infecters[{}]:{}\n", I.size(), I | views::transform([&](auto it) {return X[it]; }));
-    fmt::print("infecters: {}\n", I.size());
+    // c-11~12
+    //    fmt::print("c-11\n");
+    //    auto Cn = views::zip(bn, An, HX, rn) | par::transform(par::csize(bn),[&](auto it){
+    //        auto& [bi, Ai, xi, ri]= it;
+    //        auto ki = bi.mul(S.exp(ri,keys.p).inv(keys.p), keys.p);
+    //        return psi::H({ki, Ai, xi});
+    //    }) | to_vector;
+    //
+    //    // c-13~14
+    //
+    //    
+    //    fmt::print("c-13\n");
+    //    std::vector<int> I;
+    //    for(auto&& [i, ci] :  Cn | views::enumerate) {
+    //        for(auto& uj : Um) {
+    //            if(ci == uj) { I.emplace_back(i);}
+    //        }
+    //    }
+
+    fmt::print("intersection[{}]:{}\n", I.size(), I | views::transform([&](auto it) { return X[it]; }));
     fmt::print("finish\n");
 
     return 0;

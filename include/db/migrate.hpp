@@ -10,6 +10,7 @@
 #include <random>
 #include <tuple>
 #include <utility>
+#include "secure/hash.hpp"
 
 namespace db {
     const std::vector<PrivateSet> TEST_DATASET = {
@@ -21,7 +22,8 @@ namespace db {
     };
 
     /// if you don't want default dataset change dataset argument
-    inline void migrate(Connector& db, const std::vector<PrivateSet>& dataset = TEST_DATASET) {
+    template<typename T>
+    inline void migrate(Connector& db, const T& dataset) {
         using namespace ranges;
         for_each(dataset, [&](auto it){
             db.con()->insert(insert_nation_query(it, db.table_name()));
@@ -50,7 +52,26 @@ namespace db {
         return data_set;
     }
 
-
+    std::vector<PrivateSet> test_random_dataset_generator(int size) {
+        using namespace ranges;
+        using namespace ssl;
+        std::vector<PrivateSet> data_set;
+        auto values = views::iota(0,size);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<u_int32_t> seed_generator(0, 100);
+        std::uniform_int_distribution<u_int32_t> frequency(0, 30);
+        std::normal_distribution<float> amounts(8.3,5.0);
+        auto seed = seed_generator(gen);
+        data_set = values
+            | views::transform([&](auto it) {
+                return PrivateSet{sha1::hash_to_hex(fmt::format("{}",seed+it)).substr(0,30),
+                                  frequency(gen),
+                                  amounts(gen)};})
+            | to_vector;
+        fmt::print("generate dataset[seed:{}]:{}\n",seed, data_set.size());
+        return data_set;
+    }
 }
 
 #endif

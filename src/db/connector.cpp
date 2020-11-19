@@ -13,7 +13,7 @@ namespace db {
     }
 
     const std::string insert_nation_query(const PrivateSet& data, const std::string& table) {
-        return "insert into {} VALUES ({}, {}, {})"_format(table, data.value, data.frequency, data.amount);
+        return "insert into {} VALUES (\"{}\", {}, {})"_format(table, data.value, data.frequency, data.amount);
     }
 
     std::vector<PrivateSet> query_to_vec(mariadb::result_set_ref result) {
